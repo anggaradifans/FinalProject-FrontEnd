@@ -32,6 +32,7 @@ class ProductList extends React.Component{
                 var discount = res.data[0].discount
                 var kategori = res.data[0].kategori
                 var img = res.data[0].img
+
                 var newData = {
                     username, userId, productId, namaProduk,
                     harga, discount, kategori, img

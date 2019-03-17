@@ -186,6 +186,15 @@ class CustomPaginationActionsTable extends React.Component {
         .catch((err) => console.log(err))
   }
 
+  getTotalHarga = ()=>{
+    var harga=0
+     for (var i=0;i<this.state.rows.length;i++){
+        harga += parseInt((this.state.rows[i].harga - (this.state.rows[i].harga *this.state.rows[i].discount/100))*this.state.rows[i].quantity)
+     }
+     return harga
+     
+   }
+
   renderJsx = () => {
       var jsx = this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((val, index) => {
           return (
@@ -243,6 +252,16 @@ class CustomPaginationActionsTable extends React.Component {
           </TableHead>
             <TableBody>
               {this.renderJsx()}
+              <TableRow>
+              <TableCell colSpan={7}>Total Harga : Rp. {this.getTotalHarga()}</TableCell>
+                <TableCell colSpan={6}><Button animated color ='teal'>
+                      <Button.Content visible >Check Out </Button.Content>
+                      <Button.Content hidden>
+                          <Icon name='cart' />
+                      </Button.Content>
+                      </Button>
+                </TableCell>
+              </TableRow>
               {emptyRows > 0 && (
                 <TableRow style={{ height: 48 * emptyRows }}>
                   <TableCell colSpan={6} />

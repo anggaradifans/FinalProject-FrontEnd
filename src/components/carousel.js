@@ -8,17 +8,17 @@ import {
 
 const items = [
   {
-    src: 'https://ecs7.tokopedia.net/img/cache/1242/banner/2019/2/28/25618007/25618007_76ff7724-03c3-48c0-9372-1691a27f3f3e.jpg',
+    src: 'https://ksassets.timeincuk.net/wp/uploads/sites/54/2018/06/DfXNOZrXkAE1bJh.jpg',
     altText: 'MaretMantap',
     caption: 'MaretMantap'
   },
   {
-    src: 'https://ecs7.tokopedia.net/img/cache/1242/banner/2019/3/1/25618007/25618007_bdc7c45a-7f39-4117-97ff-3bfcee316b11.jpg',
+    src: 'https://cdn.wccftech.com/wp-content/uploads/2016/07/zelda-breath-of-the-wild.jpg',
     altText: 'MaretMantap',
     caption: 'MaretMantap'
   },
   {
-    src: 'https://ecs7.tokopedia.net/img/cache/1242/banner/2019/2/28/25618007/25618007_fd8e86f9-a99b-48e8-8fa4-3dfd91cbbdc5.jpg',
+    src: 'https://hdqwalls.com/download/monster-hunter-world-hd-h6-1280x720.jpg',
     altText: 'MaretMantap',
     caption: 'MaretMantap'
   }
@@ -70,7 +70,7 @@ class CarouselKu extends Component {
           onExited={this.onExited}
           key={item.src}
         >
-          <img src={item.src} alt={item.altText} height='200px' width='820' />
+          <img src={item.src} alt={item.altText} height='500px' width='1270px' />
           {/* <CarouselCaption captionText={item.caption} captionHeader={item.caption} /> */}
         </CarouselItem>
       );
