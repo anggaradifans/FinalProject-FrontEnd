@@ -15,7 +15,6 @@ class ProductList extends React.Component{
     }
 
     getDataProduct = () => {
-        var catUrl = this.props.match.kategori
         axios.get( urlApi + '/products')
         .then((res) => this.setState({listProduct : res.data}))
         .catch((err)=> console.log(err))

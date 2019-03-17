@@ -195,6 +195,20 @@ class CustomPaginationActionsTable extends React.Component {
      
    }
 
+  checkOut =() => {
+    Axios.post(urlApi + '/history', this.state.rows)
+      .then((res) => {
+        swal('Success', 'Transaksi Sukses', 'success')
+        this.setState({rows : []})
+        Axios.delete(urlApi + '/cart?username='+this.props.username)
+          .then((res)=> console.log(res))
+          .catch((err) => console.log(err))
+      })
+      .catch((err) => console.log(err))
+
+    
+  }
+
   renderJsx = () => {
       var jsx = this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((val, index) => {
           return (
@@ -254,7 +268,8 @@ class CustomPaginationActionsTable extends React.Component {
               {this.renderJsx()}
               <TableRow>
               <TableCell colSpan={7}>Total Harga : Rp. {this.getTotalHarga()}</TableCell>
-                <TableCell colSpan={6}><Button animated color ='teal'>
+                <TableCell colSpan={6}>
+                  <Button animated color ='teal' onClick={this.checkOut}>
                       <Button.Content visible >Check Out </Button.Content>
                       <Button.Content hidden>
                           <Icon name='cart' />

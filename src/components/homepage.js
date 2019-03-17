@@ -1,6 +1,5 @@
 import React from 'react'
-import { Card, Button, CardImg, CardTitle, CardText, CardGroup,
-  CardSubtitle, CardBody  } from 'reactstrap';
+import { Card, Button, CardImg, CardTitle, CardText, CardGroup,CardBody  } from 'reactstrap';
 import {Link} from 'react-router-dom'
 import Carousel from './carousel'
 
