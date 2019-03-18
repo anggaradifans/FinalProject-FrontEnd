@@ -56,4 +56,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect History
+export default connect(mapStateToProps)(History)
