@@ -19,8 +19,12 @@ import swal from 'sweetalert'
 import CurrencyFormat from 'react-currency-format'
 import {Button , Icon , Input} from 'semantic-ui-react'
 import { urlApi } from '../support/urlApi';
+import {fnHitungCart} from './../1.actions'
 import {connect } from 'react-redux'
+import cookie from 'universal-cookie'
 
+
+const Cookies = new cookie()
 const actionsStyles = theme => ({
   root: {
     flexShrink: 0,
@@ -123,13 +127,15 @@ class CustomPaginationActionsTable extends React.Component {
   };
 
   componentDidMount(){
-    this.getDataApi()
+    var cookie = Cookies.get('userData')
+    this.getDataApi(cookie)
   }
 
-  getDataApi = () => {
-      Axios.get(urlApi + '/cart?username=' + this.props.username)
+  getDataApi = (name) => {
+      Axios.get(urlApi + '/cart?username=' + name)
       .then((res) => { console.log(res)
           this.setState({rows : res.data})
+          this.props.fnHitungCart(res.data.length)
         })
       .catch((err) => console.log(err))
   }
@@ -174,14 +180,12 @@ class CustomPaginationActionsTable extends React.Component {
   onBtnCancel = () => {
     this.setState({isEdit : false , editItem : {}})
   }
-
-  
-  
   
   onBtnDelete = (id) => {
       Axios.delete(urlApi + '/cart/' + id)
         .then((res) => {
-            this.getDataApi()
+          var cookie = Cookies.get('userData')
+            this.getDataApi(cookie)
         })
         .catch((err) => console.log(err))
   }
@@ -196,17 +200,43 @@ class CustomPaginationActionsTable extends React.Component {
    }
 
   checkOut =() => {
-    Axios.post(urlApi + '/history', this.state.rows)
-      .then((res) => {
-        swal('Success', 'Transaksi Sukses', 'success')
-        this.setState({rows : []})
-        Axios.delete(urlApi + '/cart?username='+this.props.username)
-          .then((res)=> console.log(res))
-          .catch((err) => console.log(err))
-      })
-      .catch((err) => console.log(err))
+    Axios.get(urlApi+'/cart?userId='+this.props.id)
+      .then((res)=> {
+        if(res.data.length > 0){
+            for (var i = 0 ; i< this.state.rows.length; i++){
+              var today = new Date();
+              var dd = String(today.getDate()).padStart(2, '0');
+              var mm = String(today.getMonth() + 1).padStart(2, '0');
+              var yyyy = today.getFullYear();
+              today = mm + '/' + dd + '/' + yyyy;
+              var quantity = res.data[i].quantity
+              var username = res.data[i].username
+              var userId = res.data[i].userId
+              var productId = res.data[i].productId
+              var namaProduk = res.data[i].namaProduk
+              var harga = res.data[i].harga
+              var discount = res.data[i].discount
+              var kategori = res.data[i].kategori
 
-    
+              var newData = {tanggal : today, quantity, username, userId, productId, namaProduk, harga, discount, kategori }
+              Axios.post(urlApi + '/history',newData)
+                .then((res) => {
+                swal('Success', 'Transaksi Sukses', 'success')
+                })
+                .catch((err) => console.log(err))
+              Axios.delete(urlApi+"/cart/"+this.state.rows[i].id)
+                .then((res) => {
+                  console.log(res)
+                  this.getDataApi()
+
+                })
+                .catch((err) => console.log(err))
+            }
+        } else {
+          swal("Cart Anda Kosong", "Coba belanja dulu", "error")
+        }
+      })
+      .catch((err)=> console.log(err))
   }
 
   renderJsx = () => {
@@ -352,8 +382,9 @@ const mapStateToProps = (state) => {
   return {
     id : state.user.id,
     username : state.user.username,
-    role : state.user.role
+    role : state.user.role,
+    cart : state.cart.cart
   }
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(CustomPaginationActionsTable));
+export default connect(mapStateToProps ,{fnHitungCart})(withStyles(styles)(CustomPaginationActionsTable));
