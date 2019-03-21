@@ -16,15 +16,13 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import Axios from 'axios';
 import swal from 'sweetalert'
-import CurrencyFormat from 'react-currency-format'
 import {Button , Icon , Input} from 'semantic-ui-react'
 import { urlApi } from '../support/urlApi';
-import {fnHitungCart} from './../1.actions'
 import {connect } from 'react-redux'
-import cookie from 'universal-cookie'
+import {fnHitungCart, resetCount} from './../1.actions'
+import {Link} from 'react-router-dom'
+import PageNotFound from './pageNotFound'
 
-
-const Cookies = new cookie()
 const actionsStyles = theme => ({
   root: {
     flexShrink: 0,
@@ -127,15 +125,13 @@ class CustomPaginationActionsTable extends React.Component {
   };
 
   componentDidMount(){
-    var cookie = Cookies.get('userData')
-    this.getDataApi(cookie)
+    this.getDataApi()
   }
 
-  getDataApi = (name) => {
-      Axios.get(urlApi + '/cart?username=' + name)
+  getDataApi = () => {
+      Axios.get(urlApi + '/cart?userId=' + this.props.id)
       .then((res) => { console.log(res)
           this.setState({rows : res.data})
-          this.props.fnHitungCart(res.data.length)
         })
       .catch((err) => console.log(err))
   }
@@ -180,12 +176,12 @@ class CustomPaginationActionsTable extends React.Component {
   onBtnCancel = () => {
     this.setState({isEdit : false , editItem : {}})
   }
-  
+
   onBtnDelete = (id) => {
       Axios.delete(urlApi + '/cart/' + id)
         .then((res) => {
-          var cookie = Cookies.get('userData')
-            this.getDataApi(cookie)
+            this.getDataApi()
+            this.props.fnHitungCart(this.props.username)
         })
         .catch((err) => console.log(err))
   }
@@ -199,55 +195,103 @@ class CustomPaginationActionsTable extends React.Component {
      
    }
 
-  checkOut =() => {
-    Axios.get(urlApi+'/cart?userId='+this.props.id)
-      .then((res)=> {
-        if(res.data.length > 0){
-            for (var i = 0 ; i< this.state.rows.length; i++){
-              var today = new Date();
-              var dd = String(today.getDate()).padStart(2, '0');
-              var mm = String(today.getMonth() + 1).padStart(2, '0');
-              var yyyy = today.getFullYear();
-              today = mm + '/' + dd + '/' + yyyy;
-              var quantity = res.data[i].quantity
-              var username = res.data[i].username
-              var userId = res.data[i].userId
-              var productId = res.data[i].productId
-              var namaProduk = res.data[i].namaProduk
-              var harga = res.data[i].harga
-              var discount = res.data[i].discount
-              var kategori = res.data[i].kategori
-
-              var newData = {tanggal : today, quantity, username, userId, productId, namaProduk, harga, discount, kategori }
-              Axios.post(urlApi + '/history',newData)
-                .then((res) => {
-                swal('Success', 'Transaksi Sukses', 'success')
-                })
-                .catch((err) => console.log(err))
-              Axios.delete(urlApi+"/cart/"+this.state.rows[i].id)
-                .then((res) => {
-                  console.log(res)
-                  this.getDataApi()
-
-                })
-                .catch((err) => console.log(err))
+   getItem = () => {
+     var arr = []
+        for (var i = 0 ; i < this.state.rows.length; i++){
+            var data = {
+              namaProduk : this.state.rows[i].namaProduk, productId : this.state.rows[i].productId,
+              quantity: this.state.rows[i].quantity, harga : parseInt((this.state.rows[i].harga - (this.state.rows[i].harga *this.state.rows[i].discount/100))),
+              kategori : this.state.rows[i].kategori
             }
-        } else {
-          swal("Cart Anda Kosong", "Coba belanja dulu", "error")
+            arr.push(data)
         }
+        return arr
+   }
+
+   deleteCart = () => {
+     for(var i = 0 ; i < this.state.rows.length;i++){
+        Axios.delete(urlApi + '/cart/' + this.state.rows[i].id)
+          .then((res) => {
+            this.props.fnHitungCart(this.props.username)
+            this.getDataApi()
+          })
+     }
+   }
+
+   checkOut = () => {
+     var date = new Date()
+     var newData = {
+        tanggal : date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear(),
+        waktu : date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
+        username : this.props.username,
+        userId : this.props.id,
+        totalHarga : this.getTotalHarga(),
+        jumlahItem : this.state.rows.length,
+        cart : this.getItem()
+     }
+     Axios.post(urlApi+'/history', newData)
+      .then((res)  => {
+        swal('Success', 'Transaksi Sukses', 'success')
+        this.deleteCart()
       })
-      .catch((err)=> console.log(err))
-  }
+   }
+  // checkOut =() => {
+  //   Axios.get(urlApi+'/cart?userId='+this.props.id)
+  //     .then((res)=> {
+  //       if(res.data.length > 0){
+  //         var ArrCart= []
+  //         var totalHarga = 0
+  //         var today = new Date();
+  //         var dd = String(today.getDate()).padStart(2, '0');
+  //         var mm = String(today.getMonth() + 1).padStart(2, '0');
+  //         var jam = String(today.getHours()).padStart(2, '0');
+  //         var menit = String(today.getMinutes()).padStart(2, '0');
+  //         var detik = String(today.getSeconds()).padStart(2, '0');
+  //         var yyyy = today.getFullYear();
+  //         today = mm + '/' + dd + '/' + yyyy;
+  //         var waktu = jam + ':' + menit + ':' + detik
+  //         var jumlahItem = res.data.length
+  //         var username = this.props.username
+  //         var userId = this.props.id
+  //         var newData = {tanggal : today, waktu ,username, userId, jumlahItem}
+  //           for (var i = 0 ; i< this.state.rows.length; i++){
+  //             var quantity = res.data[i].quantity
+  //             var productId = res.data[i].productId
+  //             var namaProduk = res.data[i].namaProduk
+  //             var harga = res.data[i].harga - (res.data[i].harga*(res.data[i].discount/100))
+  //             var discount = res.data[i].discount
+  //             var kategori = res.data[i].kategori
+  //             totalHarga += (res.data[i].harga - (res.data[i].harga*(res.data[i].discount/100)))*quantity
+  //             var DataCart = {namaProduk, productId, quantity,harga,discount,kategori}
+  //             ArrCart.push(DataCart)
+  //             Axios.delete(urlApi+"/cart/"+this.state.rows[i].id)
+  //               .then((res) => {
+  //                 console.log(res)
+  //                 this.props.resetCount()
+  //                 this.getDataApi()
+  //               })
+  //               .catch((err) => console.log(err))
+  //           } Axios.post(urlApi + '/history',{...newData,totalHarga,cart : ArrCart})
+  //               .then((res) => {
+  //               swal('Success', 'Transaksi Sukses', 'success')
+  //               })
+  //               .catch((err) => console.log(err))
+  //       } else {
+  //         swal("Cart Anda Kosong", "Coba belanja dulu", "error")
+  //       }
+  //     })
+  //     .catch((err)=> console.log(err))
+  // }
 
   renderJsx = () => {
-      var jsx = this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((val, index) => {
+    var jsx = this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((val, index) => {
           return (
                 <TableRow key={val.id}>
                  <TableCell>{index+1}</TableCell>
                   <TableCell component="th" scope="row">
                     {val.namaProduk}
                   </TableCell>
-                  <CurrencyFormat value= {val.harga - (val.harga*(val.discount/100))} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} renderText={value => <TableCell>{value}</TableCell>} />
+                  <TableCell>Rp. {val.harga - (val.harga*(val.discount/100))}</TableCell>
                   <TableCell>{val.discount}%</TableCell>
                   <TableCell>{val.kategori}</TableCell>
                   <TableCell><img src={val.img} width='50px' alt='...'/></TableCell>
@@ -278,98 +322,131 @@ class CustomPaginationActionsTable extends React.Component {
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
     var {namaProduk, quantity} = this.state.editItem
     
-    return (
-    <div className = 'container'>
-      <Paper className={classes.root}>
-        <div className={classes.tableWrapper}>
-          <Table className={classes.table}>
-          <TableHead>
-              <TableRow>
-                  <TableCell style={{fontSize:'20px', fontWeight:'600'}}>NO</TableCell>
-                  <TableCell style={{fontSize:'20px', fontWeight:'600'}}>PRODUK</TableCell>
-                  <TableCell style={{fontSize:'20px', fontWeight:'600'}}>HARGA</TableCell>
-                  <TableCell style={{fontSize:'20px', fontWeight:'600'}}>DISC</TableCell>
-                  <TableCell style={{fontSize:'20px', fontWeight:'600'}}>CAT</TableCell>
-                  <TableCell style={{fontSize:'20px', fontWeight:'600'}}>IMG</TableCell>
-                  <TableCell style={{fontSize:'20px', fontWeight:'600'}}>QTY</TableCell>
-              </TableRow>
-          </TableHead>
-            <TableBody>
-              {this.renderJsx()}
-              <TableRow>
-              <TableCell colSpan={7}>Total Harga : Rp. {this.getTotalHarga()}</TableCell>
-                <TableCell colSpan={6}>
-                  <Button animated color ='teal' onClick={this.checkOut}>
-                      <Button.Content visible >Check Out </Button.Content>
-                      <Button.Content hidden>
-                          <Icon name='cart' />
-                      </Button.Content>
-                      </Button>
-                </TableCell>
-              </TableRow>
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 48 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  colSpan={3}
-                  count={rows.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    native: true,
-                  }}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActionsWrapped}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </div>
-      </Paper>
-
-  {/* EDIT PRODUCT */}
-
-    {
-      this.state.isEdit === true ?
-      <Paper className='mt-3'>
-          <Table>
-              <TableHead>
-              <TableRow>
-                  <TableCell style={{fontSize:'20px', fontWeight:'600'}}>EDIT QUANTITY PRODUCT {namaProduk}</TableCell>
-              </TableRow>
-              </TableHead>
-              <TableBody>
+    if(this.props.username !== ''){
+      if(this.state.rows.length > 0){
+        return (
+          <div className = 'container'>
+            <Paper className={classes.root}>
+              <div className={classes.tableWrapper}>
+                <Table className={classes.table}>
+                <TableHead>
+                    <TableRow>
+                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>NO</TableCell>
+                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>PRODUK</TableCell>
+                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>HARGA</TableCell>
+                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>DISC</TableCell>
+                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>CAT</TableCell>
+                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>IMG</TableCell>
+                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>QTY</TableCell>
+                    </TableRow>
+                </TableHead>
+                  <TableBody>
+                    {this.renderJsx()}
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: 48 * emptyRows }}>
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                  <TableFooter>
                   <TableRow>
-                      <TableCell>
-                        <Input ref={input => this.quantityEdit = input} placeholder={quantity} className='mt-2 ml-2 mb-2'/>
-                        <Button animated color ='teal' className='mt-2 ml-2 mb-2' onClick={this.onBtnSave}>
-                        <Button.Content visible>Save Changes</Button.Content>
-                        <Button.Content hidden>
-                            <Icon name='save' />
-                        </Button.Content>
-                        </Button>
-                        <Button animated color ='red' className='mt-2 ml-2 mb-2' onClick={this.onBtnCancel}>
-                        <Button.Content visible>Cancel</Button.Content>
-                        <Button.Content hidden>
-                            <Icon name='cancel' />
-                        </Button.Content>
-                        </Button>
+                    <TableCell colSpan={4}>Total Harga : Rp. {this.getTotalHarga()}</TableCell>
+                      <TableCell colSpan={1}>
+                        <Button animated color ='teal' onClick={this.checkOut}>
+                            <Button.Content visible >Check Out </Button.Content>
+                            <Button.Content hidden>
+                                <Icon name='cart' />
+                            </Button.Content>
+                            </Button>
                       </TableCell>
-                  </TableRow>
-              </TableBody>
-          </Table>
-      </Paper>
-      : null
+                      <TableCell colSpan={2}>
+                        <Link to ='/products'><Button animated color ='teal'>
+                            <Button.Content visible >Continue Shopping</Button.Content>
+                            <Button.Content hidden>
+                                <Icon name='cart' />
+                            </Button.Content>
+                            </Button>
+                            </Link>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        colSpan={3}
+                        count={rows.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        SelectProps={{
+                          native: true,
+                        }}
+                        onChangePage={this.handleChangePage}
+                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                        ActionsComponent={TablePaginationActionsWrapped}
+                      />
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+              </div>
+            </Paper>
+      
+        {/* EDIT PRODUCT */}
+      
+          {
+            this.state.isEdit === true ?
+            <Paper className='mt-3'>
+                <Table>
+                    <TableHead>
+                    <TableRow>
+                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>EDIT QUANTITY PRODUCT {namaProduk}</TableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell>
+                              <Input ref={input => this.quantityEdit = input} placeholder={quantity} className='mt-2 ml-2 mb-2'/>
+                              <Button animated color ='teal' className='mt-2 ml-2 mb-2' onClick={this.onBtnSave}>
+                              <Button.Content visible>Save Changes</Button.Content>
+                              <Button.Content hidden>
+                                  <Icon name='save' />
+                              </Button.Content>
+                              </Button>
+                              <Button animated color ='red' className='mt-2 ml-2 mb-2' onClick={this.onBtnCancel}>
+                              <Button.Content visible>Cancel</Button.Content>
+                              <Button.Content hidden>
+                                  <Icon name='cancel' />
+                              </Button.Content>
+                              </Button>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </Paper>
+            : null
+          }
+            </div>
+          );
+      } else {
+        return (
+          <div className="container">
+            <div className="row justify-content-center">
+            <div className='col-md-3'>
+              <h2>Cart Anda Kosong</h2>
+            </div>
+            <div className="row justify-content-center">
+            <div className='col-md-3'>
+            <Link to ='/products'><input type = "button" className="btn btn-outline-success" value = "Silahkan Belanja Lagi"/></Link>
+            </div>
+            
+            </div>
+            </div>
+          </div>
+        )
+      }
     }
-      </div>
-    );
+     else {
+      return <PageNotFound/>
+    }
+    
   
   }
 }
@@ -387,4 +464,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps ,{fnHitungCart})(withStyles(styles)(CustomPaginationActionsTable));
+export default connect(mapStateToProps, {fnHitungCart, resetCount})(withStyles(styles)(CustomPaginationActionsTable));

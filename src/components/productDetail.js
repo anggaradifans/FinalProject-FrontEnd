@@ -5,9 +5,10 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import swal from 'sweetalert'
 import CurrencyFormat from 'react-currency-format'
+import {fnHitungCart} from './../1.actions'
 
 class ProductDetail extends React.Component {
-    state ={product : {}}
+    state ={product : {}, cart : 0}
     
     componentDidMount(){
         this.getDataApi()
@@ -73,14 +74,15 @@ class ProductDetail extends React.Component {
                             console.log(err)
                         })
                     } else {
-                        Axios.post(urlApi + '/cart', newData)
-                    .then((res) => {
-                        console.log(res)
-                        swal('Success', "Item added to Cart", 'success')
-                        })
-                    .catch((err) => {
-                            console.log(err)
-                        })
+                    Axios.post(urlApi + '/cart', newData)
+                        .then((res) => {
+                            console.log(res)
+                            swal('Success', "Item added to Cart", 'success')
+                            this.props.fnHitungCart(this.props.username)
+                            })
+                        .catch((err) => {
+                                console.log(err)
+                            })
                 }
                 })
             })
@@ -155,8 +157,9 @@ class ProductDetail extends React.Component {
 const mapStateToProps = (state) => {
     return {
         username : state.user.username,
-        id : state.user.id
+        id : state.user.id,
+        cart : state.cart.cart
     }
 }
 
-export default connect(mapStateToProps)(ProductDetail);
+export default connect(mapStateToProps, {fnHitungCart})(ProductDetail);

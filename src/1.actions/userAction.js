@@ -21,6 +21,7 @@ export const onLogin = (paramUsername,paramPassword) => {
             console.log(res)
         //if username dan password sesuai maka res.data ada isinya
             if(res.data.length > 0){
+                
                 dispatch(
                     {
                         type : 'LOGIN_SUCCESS',
@@ -63,6 +64,11 @@ export const keepLogin = (cookie) => {
     }
 }
 
+export const cookieChecked = () => {
+    return {
+        type : 'COOKIE_CHECKED'
+    }
+}
 
 export const resetUser = () => {
     return {

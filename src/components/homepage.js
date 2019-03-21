@@ -11,8 +11,8 @@ class Homepage extends React.Component{
             <Carousel/>
           </div>
           <div className="container mt-5 mb-5"> 
-            <h1 style={{textAlign:"center"}}> Selamat Datang di Online Game Shop kami </h1>
-            <h2 style={{textAlign:"center", fontWeight:"700"}}>Produk Kami</h2>
+            <h1 className='bg-danger text-white rounded-pill shadow-lg' style={{textAlign:"center"}}> Selamat Datang di Online Game Shop kami </h1>
+            <h2 className='shadow-lg d-block' style={{textAlign:"center", fontWeight:"700"}}>Produk Kami</h2>
           </div>
           <CardGroup>
             <Card>

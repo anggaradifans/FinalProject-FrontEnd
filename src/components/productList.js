@@ -6,9 +6,10 @@ import CurrencyFormat from 'react-currency-format'
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux'
 import swal from 'sweetalert'
+import {fnHitungCart} from './../1.actions'
 
 class ProductList extends React.Component{
-    state = {listProduct : []}
+    state = {listProduct : [], cart : 0}
 
     componentDidMount(){
         this.getDataProduct()
@@ -53,6 +54,7 @@ class ProductList extends React.Component{
                                 .then((res) =>{
                                     console.log(res)
                                     swal('Success', 'Item added to Cart', 'success')
+                                    this.props.fnHitungCart(this.props.username)
                                 })
                                 .catch((err) => {
                                     console.log(err)
@@ -109,4 +111,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(ProductList)
+export default connect(mapStateToProps, {fnHitungCart})(ProductList)

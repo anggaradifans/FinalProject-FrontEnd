@@ -5,7 +5,7 @@ import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Un
     DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux'
-import {resetUser} from './../1.actions'
+import {resetUser, resetCount} from './../1.actions'
 import cookie from 'universal-cookie'
 
 const objCookie = new cookie()
@@ -25,15 +25,17 @@ class HeaderKu extends Component{
        });
     }
 
+
     onBtnLogOut = () => {
         objCookie.remove('userData')
         this.props.resetUser()
+        this.props.resetCount()
     }
 
     render(){ 
             if(this.props.username === ""){
                 return(
-                    <div style={{marginBottom:"50px"}}>
+                    <div style={{marginBottom:"75px"}}>
                         <Navbar color="light" light expand="md" fixed="top">
                             <NavbarBrand className="ml-2" ><Link to='/'> <img src="http://www.logospng.com/images/43/letter-f-bootstrap-logos-43177.png" alt="brand" width="30px" /> </Link> </NavbarBrand>
                             <NavbarToggler onClick={this.toggle} />
@@ -61,7 +63,7 @@ class HeaderKu extends Component{
                 )
             } else {
                 return(
-                    <div style={{marginBottom:"50px"}}>
+                    <div style={{marginBottom:"75px"}}>
                         <Navbar color="light" light expand="md" fixed="top">
                             <NavbarBrand className="ml-2" ><Link to='/'> <img src="http://www.logospng.com/images/43/letter-f-bootstrap-logos-43177.png" alt="brand" width="30px" /> </Link> </NavbarBrand>
                             <NavbarToggler onClick={this.toggle} />
@@ -90,22 +92,23 @@ class HeaderKu extends Component{
                                         Menu
                                         </DropdownToggle>
                                         <DropdownMenu right>
-                                    {this.props.role === 'admin' ? 
-                                    <Link to='/manage'>
-                                    <DropdownItem>
-                                            Manage Items
+                                        {this.props.role === 'admin' ?
+                                        <Link to="/manage"><DropdownItem>
+                                        Manage Products
                                         </DropdownItem></Link> : null
-                                    }
-                                        <DropdownItem>
+                                        }
+                                        <Link to='/history'><DropdownItem>
                                             Transaction History
                                         </DropdownItem>
+                                        </Link>
                                         <DropdownItem>
                                             Edit Profile
                                         </DropdownItem>
                                         <DropdownItem divider />
-                                        <DropdownItem onClick={this.onBtnLogOut}>
+                                        <Link to='/'><DropdownItem onClick={this.onBtnLogOut}>
                                             Logout
                                         </DropdownItem>
+                                        </Link>
                                         </DropdownMenu>
                                     </UncontrolledDropdown>
                                 </Nav>
@@ -127,4 +130,4 @@ const mapStateToProps = (state) => {
 
 
 
-export default connect(mapStateToProps,{resetUser})(HeaderKu);
+export default connect(mapStateToProps,{resetUser, resetCount})(HeaderKu);
