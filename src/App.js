@@ -11,6 +11,7 @@ import ProductDetail from './components/productDetail'
 import ScrolltoTop from  './components/scrolltoTop'
 import Cart from './components/cart'
 import History from './components/history'
+import Footer from './components/footer'
 import { Route, withRouter, Switch } from 'react-router-dom'
 import {connect} from 'react-redux'
 import cookie from 'universal-cookie'
@@ -38,7 +39,8 @@ class App extends Component {
   render() {
     if(this.props.cookie){
     return (
-      <div>
+      <div className='position-relative' style={{minHeight:"100vh"}}>
+        <div style={{paddingBottom:"190.6px"}}>
           <Navbar/>
           <ScrolltoTop>
           <Switch>
@@ -57,6 +59,8 @@ class App extends Component {
           
           </Switch>
           </ScrolltoTop>
+        </div>
+          <Footer/>
       </div>
     );
   }

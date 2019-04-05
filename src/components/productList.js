@@ -16,7 +16,7 @@ class ProductList extends React.Component{
     }
 
     getDataProduct = () => {
-        axios.get( urlApi + '/products')
+        axios.get( urlApi + '/product/products')
         .then((res) => this.setState({listProduct : res.data}))
         .catch((err)=> console.log(err))
     }
@@ -75,12 +75,12 @@ class ProductList extends React.Component{
                         }
                         <div className="kategori mb-2">{val.subkategori}</div>
                             <div className="card-body">
-                                <h4>{val.nama}</h4>
+                                <h4>{val.product_name}</h4>
                                 { val.discount > 0 ?
-                                    <CurrencyFormat value={val.harga} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <p className="card-text mr-5" style={{textDecoration:'line-through', color:'red', display:'inline'}}>{value}</p>}/>
+                                    <CurrencyFormat value={val.price} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <p className="card-text mr-5" style={{textDecoration:'line-through', color:'red', display:'inline'}}>{value}</p>}/>
                                     : null
                                 }
-                                <CurrencyFormat value={val.harga - (val.harga*(val.discount/100))} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <p className="card-text mr-5" style={{display:'inline',fontWeight:'700'}}>{value}</p>}/>
+                                <CurrencyFormat value={val.price - (val.price*(val.discount/100))} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <p className="card-text mr-5" style={{display:'inline',fontWeight:'700'}}>{value}</p>}/>
                                 <p className="mt-2">{val.deskripsi}</p>
                                 { this.props.username === "" ?
                                 <Link to='/login'><input type='button' className="btn btn-primary" value="Add to Cart"/></Link> :

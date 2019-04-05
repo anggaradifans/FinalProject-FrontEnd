@@ -4,23 +4,24 @@ import {
   CarouselItem,
   CarouselControl,
   CarouselIndicators,
+  CarouselCaption
 } from 'reactstrap';
 
 const items = [
   {
     src: 'https://ksassets.timeincuk.net/wp/uploads/sites/54/2018/06/DfXNOZrXkAE1bJh.jpg',
     altText: 'MaretMantap',
-    caption: 'MaretMantap'
+    caption: 'Devil May Cry 5'
   },
   {
     src: 'https://cdn.wccftech.com/wp-content/uploads/2016/07/zelda-breath-of-the-wild.jpg',
     altText: 'MaretMantap',
-    caption: 'MaretMantap'
+    caption: 'The Legend of Zelda : Breath of the Wild'
   },
   {
     src: 'https://hdqwalls.com/download/monster-hunter-world-hd-h6-1280x720.jpg',
     altText: 'MaretMantap',
-    caption: 'MaretMantap'
+    caption: 'Monster Hunter World'
   }
 ];
 
@@ -70,8 +71,8 @@ class CarouselKu extends Component {
           onExited={this.onExited}
           key={item.src}
         >
-          <img src={item.src} alt={item.altText} height='500px' width='1270px' />
-          {/* <CarouselCaption captionText={item.caption} captionHeader={item.caption} /> */}
+          <img src={item.src} alt={item.altText} height='550px' width='1270px' />
+          <CarouselCaption captionText={item.caption} captionHeader={item.caption} />
         </CarouselItem>
       );
     });

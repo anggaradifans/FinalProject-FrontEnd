@@ -7,7 +7,8 @@ import GlobalState from './2.reducers'
 import ReduxThunk from 'redux-thunk'
 
 import './index.css';
-import './support/css/bootstrap/css/bootstrap.min.css';
+import "bootstrap-css-only/css/bootstrap.min.css";
+import "mdbreact/dist/css/mdb.css";
 import './support/fontawesome-free/css/fontawesome.min.css'
 import './support/fontawesome-free/css/all.min.css'
 import 'semantic-ui-css/semantic.min.css'

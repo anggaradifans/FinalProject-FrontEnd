@@ -10,7 +10,9 @@ form {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url("../../components/img/bg-01.jpg")
+    background-image: url("../../components/img/bg-01.jpg");
+    margin-top: -20px;
+    margin-bottom: -22px;
 }
 
 .layer {
@@ -19,3 +21,10 @@ form {
     background-image: linear-gradient(to bottom,rgba(0,0,0,0.5), rgba(0,0,0,0.3) );
     margin-top: -600px;
 }
+
+.footerku {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }

@@ -4,7 +4,13 @@ export default (state=INITIAL_STATE,action) => {
     if(action.type === 'LOGIN_SUCCESS'){
         return {...INITIAL_STATE, id : action.payload.id, 
             username : action.payload.username , role : action.payload.role, cookie : true}
+    }
+     else if (action.type === 'REGISTER_SUCCESS'){
+        return {...INITIAL_STATE, cookie : true}
     } 
+    else if (action.type === 'NOT_VERIFIED'){
+        return {...INITIAL_STATE, error : 'Email Not Verified', cookie : true}
+    }
     else if (action.type === 'LOADING') {
         return{...INITIAL_STATE , loading : true, cookie : true}
     } else if (action.type === 'USER_NOT_FOUND'){

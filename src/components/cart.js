@@ -221,7 +221,7 @@ class CustomPaginationActionsTable extends React.Component {
    checkOut = () => {
      var date = new Date()
      var newData = {
-        tanggal : date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear(),
+        tanggal : date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
         waktu : date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
         username : this.props.username,
         userId : this.props.id,

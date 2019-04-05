@@ -119,7 +119,10 @@ class CustomPaginationActionsTable extends React.Component {
     page: 0,
     rowsPerPage: 5,
     isEdit : false,
-    editItem : {}
+    editItem : {},
+    selectedFile : null,
+    error : ''
+
   };
 
   componentDidMount(){
@@ -127,7 +130,7 @@ class CustomPaginationActionsTable extends React.Component {
   }
 
   getDataApi = () => {
-      Axios.get(urlApi + '/products')
+      Axios.get(urlApi + '/product/products')
       .then((res) => this.setState({rows : res.data}) )
       .catch((err) => console.log(err))
   }
@@ -140,26 +143,40 @@ class CustomPaginationActionsTable extends React.Component {
     this.setState({ page: 0, rowsPerPage: event.target.value });
   };
 
-  onBtnAdd = () => {
-      var name = this.nama.inputRef.value
-      var harga = this.harga.inputRef.value
-      var diskon = this.discount.inputRef.value
-      var kategori = this.category.inputRef.value
-      var image = this.image.inputRef.value
-      var deskripsi = this.deskripsi.inputRef.value
+  onChangeHandler =  (event) => {
+    //Untuk mendapatkan file  image
+    this.setState({selectedFile : event.target.files[0] })
+}
 
-      var newData = {nama : name , harga : parseInt(harga) , discount : parseInt(diskon) , kategori : kategori , img : image , deskripsi : deskripsi }
-      Axios.post(urlApi+'/products', newData)
+  valueHandler = () => {
+    var value = this.state.selectedFile ? this.state.selectedFile.name : 'Pick a Picture'
+    return value
+  }
+
+  onBtnAdd = () => {
+      var newData = {product_name : this.refs.nama.value , price : this.refs.harga.value ,
+                    discount : this.refs.diskon.value , category : this.refs.kategori.value , 
+                    subcategory : this.refs.subkategori.value,  deskripsi : this.refs.deskripsi.value }
+        alert(newData.product_name)
+      var fd = new FormData()
+      fd.append('data' , JSON.stringify(newData))
+      fd.append('image', this.state.selectedFile, this.state.selectedFile.name)
+      Axios.post(urlApi+'/product/addproduct', fd)
         .then((res) => {
-        swal("Product Added", "New product has been added", "success")
-        this.getDataApi()
-        this.nama.inputRef.value=''
-        this.harga.inputRef.value=''
-        this.discount.inputRef.value=''
-        this.category.inputRef.value=''
-        this.image.inputRef.value=''
-        this.deskripsi.inputRef.value=''} 
-        )
+        if(res.data.error){
+          this.setState({error : res.data.msg})
+        } else {
+          swal("Product Added", "New product has been added", "success")
+            this.getDataApi()
+            this.refs.nama.value=''
+            this.refs.harga.value=''
+            this.refs.diskon.value=''
+            this.refs.kategori.value=''
+            this.refs.subkategori.value=''
+            this.refs.deskripsi.value=''
+            this.setState({selectedFile: null})
+        }
+        })
         .catch((err) => console.log(err))
   }
 
@@ -208,11 +225,11 @@ class CustomPaginationActionsTable extends React.Component {
                 <TableRow key={val.id}>
                  <TableCell>{val.id}</TableCell>
                   <TableCell component="th" scope="row">
-                    {val.nama}
+                    {val.product_name}
                   </TableCell>
-                  <TableCell>Rp. {val.harga}</TableCell>
+                  <TableCell>Rp. {val.price}</TableCell>
                   <TableCell>{val.discount}%</TableCell>
-                  <TableCell>{val.kategori}</TableCell>
+                  <TableCell>{val.category}</TableCell>
                   <TableCell><img src={val.img} width='50px' alt='...'/></TableCell>
                   <TableCell>{val.deskripsi}</TableCell>
                   <TableCell>
@@ -288,38 +305,39 @@ class CustomPaginationActionsTable extends React.Component {
       </Paper>
 
       {/* ADD PRODUCT */}
-      <Paper className='mt-3'>
-          <Table>
-              <TableHead>
-              <TableRow>
-                  <TableCell style={{fontSize:'20px', fontWeight:'600'}}>ADD PRODUCT</TableCell>
-              </TableRow>
-              </TableHead>
-              <TableBody>
-                  <TableRow>
-                      <TableCell>
-                        <Input ref={input => this.nama = input} placeholder='Nama Product' className='mt-2 ml-2 mb-2'/>
-                      <Input  ref={input => this.harga = input} labelPosition='right' type='number' className='mt-2 ml-2 mb-2' placeholder='Harga Product'>
-                            <Label basic>Rp</Label>
-                            <input />
-                            <Label>.00</Label>
-                        </Input>
-                        <Input ref={input => this.discount = input} placeholder='Discount' className='mt-2 ml-2 mb-2'/>
-                        <Input ref={input => this.category = input} placeholder='Category' className='mt-2 ml-2 mb-2'/>
-                        <Input ref={input => this.image = input} placeholder='Image' className='mt-2 ml-2 mb-2'/>
-                        <Input ref={input => this.deskripsi = input} placeholder='Deskripsi' className='mt-2 ml-2 mb-2'/>
-                        <Button animated color ='teal' className='mt-2 ml-2 mb-2' onClick={this.onBtnAdd}>
-                        <Button.Content visible>Add Product</Button.Content>
-                        <Button.Content hidden>
-                            <Icon name='add' />
-                        </Button.Content>
-                        </Button>
-                      </TableCell>
-                  </TableRow>
-              </TableBody>
-          </Table>
-      </Paper>
-
+      <h2>Add Product</h2>
+      <div className = 'row mt-5 mb-2'>
+          <div className= 'col-md-3'>
+              <input className="form-control" ref ="nama" type="text" placeholder='Masukkan nama barang'/>
+          </div>
+          <div className= 'col-md-3'>
+              <input className="form-control" ref="harga" type="number" placeholder='Masukkan harga barang'/>
+          </div>
+          <div className= 'col-md-3'>
+              <input className="form-control" ref="diskon" type="number" placeholder='Masukkan diskon barang'/>
+          </div>
+          <div className= 'col-md-3'>
+              <input className="form-control" ref ="kategori" type="text" placeholder='Masukkan kategori'/>
+          </div>
+      </div>
+      <div className = 'row mb-5'>
+          <div className= 'col-md-3'>
+              <input className="form-control" ref="subkategori" type="text" placeholder='Masukkan subkategori'/>
+          </div>
+          <div className= 'col-md-3'>
+              <input className="form-control" ref="deskripsi" type="text" placeholder='Masukkan deskripsi'/>
+          </div>
+          <div className= 'col-md-3'>
+            <input style={{display:"none"}} ref="input" type="file" onChange={this.onChangeHandler}/>
+            <input type="button" className="form-control btn-success" onClick={() => this.refs.input.click()} value={this.valueHandler()}/>
+          </div>
+          <div className= 'col-md-3'>
+            <input type="button" className="form-control btn-primary" onClick={this.onBtnAdd} value="Add Data"/>
+            {
+              this.state.error ? <p style={{color:'red'}}>{this.state.error}</p> : null
+            }
+          </div>
+      </div>
   {/* EDIT PRODUCT */}
 
     {

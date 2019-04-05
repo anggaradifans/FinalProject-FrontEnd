@@ -5,7 +5,7 @@ import {onLogin, fnHitungCart} from './../1.actions'
 import Loader from 'react-loader-spinner'
 import cookie from 'universal-cookie'
 import './../support/css/style.css'
-import swal from 'sweetalert'
+
 
 //COOKIE MENYIMPAN DATA DI BROWSER
 const Cookie = new cookie()
@@ -23,7 +23,7 @@ class Login extends React.Component{
         var username = this.refs.username.value
         var password = this.refs.password.value
         this.props.onLogin(username,password)
-        swal("Success", "Login Success, Redirecting to Homepage" , "success")
+        
     }
     
     renderBtnOrLoading = () => {
@@ -33,7 +33,7 @@ class Login extends React.Component{
             height="40"	
             width="40"/>
         } else {
-            return <button type="button" className="btn btn-outline-primary" onClick={this.onBtnLoginClick} style={{width:"300px"}} ><i className="fas fa-sign-in-alt" /> Login</button>
+            return <button type="button" className="btn blue-gradient" onClick={this.onBtnLoginClick} style={{width:"300px"}} ><i className="fas fa-sign-in-alt" /> Login</button>
         }
 
     }
@@ -54,38 +54,39 @@ class Login extends React.Component{
           <div className='bgimg'>
             <div className="container myBody" style={{minHeight:"600px"}}>
                 <div className="row justify-content-sm-center ml-auto mr-auto mt-3" >
-                    
                     <form className="border mb-3" style={{padding:"20px", borderRadius:"5%" , backgroundColor:"white"}} ref="formLogin">
                         <fieldset>
                             <h2>Login</h2>
-                            <div className="form-group row">
-                                <label className="col-sm-3 col-form-label">Username</label>
-                                <div className="col-sm-9">
+                            <div className="input-group mb-3">
+                                <div className="input-group-prepend">
+                                    <span className="input-group-text" id="basic-addon">
+                                    <i className="fa fa-user prefix"></i>
+                                    </span>
+                                </div>
                                 <input type="text" ref="username" className="form-control" id="inputEmail" placeholder="Username" required autoFocus/>
-                                </div>
                             </div>
-
-                            <div className="form-group row">
-                                <label className="col-sm-3 col-form-label">Password</label>
-                                <div className="col-sm-9">
+                            <div className="input-group mb-3">
+                                <div className="input-group-prepend">
+                                    <span className="input-group-text" id="basic-addon">
+                                    <i class="fas fa-key"></i>
+                                    </span>
+                                </div>
                                 <input type="password" ref="password" className="form-control" id="inputPassword" placeholder="Password" onKeyPress={this.renderOnKeyPress} required />
-                                </div>
                             </div>
-                            
-                            <div className="form-group row">
+                            <div className="my-auto"><h5>Don't have Account? <Link to="/register" className="border-bottom">Sign Up!</Link></h5></div>
+                            <div className="form-group row mt-3">
                                 <div className="col-12" style={{textAlign:"center"}}>
                                     {this.renderBtnOrLoading()}
                                     {this.renderErrorMessage()}
-                                </div>
-                                    
+                                </div>     
                             </div>
-                            <div className="btn my-auto"><p>Don't have Account? <Link to="/register" className="border-bottom">Sign Up!</Link></p></div>
+                            
                         </fieldset>
                     </form>
                 </div>                
               </div>
                 <div className="layer">
-
+                
                 </div>
             </div>
         )

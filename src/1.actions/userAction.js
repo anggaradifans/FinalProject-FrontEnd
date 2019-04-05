@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {urlApi} from './../support/urlApi'
 import cookie from 'universal-cookie'
+import swal from 'sweetalert'
 
 const objCookie = new cookie()
 
@@ -13,28 +14,34 @@ export const onLogin = (paramUsername,paramPassword) => {
             type : 'LOADING',
         })
         //Get data dari fake api json server
-        axios.get( urlApi + '/users',
-        {params:{username :paramUsername, password:paramPassword}})
-        
+        axios.get( urlApi + `/user/userLogin?username=${paramUsername}&password=${paramPassword}`)
+
         //Kalo berhasil nge get, dia masuk then
         .then((res) => {
             console.log(res)
         //if username dan password sesuai maka res.data ada isinya
-            if(res.data.length > 0){
-                
+            if(res.data.length === 0){
+                dispatch({
+                    type : 'USER_NOT_FOUND',
+                })
+            } 
+            else if( res.data[0].verified === 0){
+                dispatch(
+                    {
+                        type : 'NOT_VERIFIED',
+                    }
+                )
+            }
+            else {
                 dispatch(
                     {
                         type : 'LOGIN_SUCCESS',
                         payload : { id : res.data[0].id ,
                             username : res.data[0].username ,
                             role : res.data[0].role}
-                    }
+                        
+                    }, swal("Success", "Login Success, Redirecting to Homepage" , "success")
                 )
-            }
-            else {
-                dispatch({
-                    type : 'USER_NOT_FOUND',
-                })
             }
             
             
@@ -51,13 +58,14 @@ export const onLogin = (paramUsername,paramPassword) => {
 
 export const keepLogin = (cookie) => {
     return(dispatch) => {
-        axios.get( urlApi + '/users',{params : {username : cookie}})
+        axios.get( urlApi + `/user/keeplogin`, {params : {username : cookie}})
         .then((res) => {
             if(res.data.length > 0){
                 dispatch({
                     type : 'LOGIN_SUCCESS',
                     payload : res.data[0]
                 })
+
             }
         })
         .catch((err) => console.log(err))
@@ -84,22 +92,20 @@ export const userRegister = (a,b,c,d) => {
         dispatch({
             type : 'LOADING'
         })
-        var newData = {username : a, password : b, email : c, phone : d, role :"user"}
-        axios.get( urlApi + '/users?username=' + newData.username)
+        var newData = {username : a, password : b, email : c, phone : d, role :"user", verified : 0}
+        axios.post( urlApi + '/user/addUser', newData)
         .then((res) => {
-            if(res.data.length > 0) {
+            if(res.data === 'Username sudah ada') {
                 dispatch({
                     type : 'USERNAME_NOT_AVAILABLE'
                 })
             } else {
-                axios.post( urlApi + '/users', newData)
-                .then((res)=> dispatch({
-                    type : 'LOGIN_SUCCESS',
-                    payload : {username : newData.username}
+                dispatch({
+                    type : 'REGISTER_SUCCESS'
                 },
                     objCookie.set('userData',a,{path : '/'}) // path '/' agar cookienya diakses di semua components
-                ))
-                .catch((err)=> console.log(err))
+                )
+                
             }
         })
         .catch((err) => {
