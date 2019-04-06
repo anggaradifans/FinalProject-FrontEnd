@@ -157,7 +157,7 @@ class CustomPaginationActionsTable extends React.Component {
       var newData = {product_name : this.refs.nama.value , price : this.refs.harga.value ,
                     discount : this.refs.diskon.value , category : this.refs.kategori.value , 
                     subcategory : this.refs.subkategori.value,  deskripsi : this.refs.deskripsi.value }
-        alert(newData.product_name)
+    
       var fd = new FormData()
       fd.append('data' , JSON.stringify(newData))
       fd.append('image', this.state.selectedFile, this.state.selectedFile.name)
@@ -230,7 +230,7 @@ class CustomPaginationActionsTable extends React.Component {
                   <TableCell>Rp. {val.price}</TableCell>
                   <TableCell>{val.discount}%</TableCell>
                   <TableCell>{val.category}</TableCell>
-                  <TableCell><img src={val.img} width='50px' alt='...'/></TableCell>
+                  <TableCell><img src={ `http://localhost:2000/${val.image}`} width='50px' alt='...'/></TableCell>
                   <TableCell>{val.deskripsi}</TableCell>
                   <TableCell>
                     <Button animated color ='teal' onClick={() => this.onBtnEditClick(val)}>
