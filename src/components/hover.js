@@ -8,7 +8,7 @@ class Hover extends React.Component{
                 <div className='row justify-content-center mb-5'>
                     <div className='col-md-4'>
                     <div className="view overlay">
-                        <img src="https://store.playstation.com/store/api/chihiro/00_09_000/container/ID/en/19/UP0102-CUSA08216_00-ASIAFULLGAME0000/1552021784000/image?w=360&h=360&bg_color=000000&opacity=100&_version=00_09_000" className="img-fluid " alt=" ..." />
+                        <img src="http://localhost:2000/upload/PRD-1554470593046.jpeg" className="img-fluid " alt=" ..." />
                         <div className="mask flex-center rgba-stylish-strong">
                         <h2 className="white-text">PS4 Videogames</h2>
                         </div>

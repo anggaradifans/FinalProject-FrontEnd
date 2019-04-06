@@ -16,9 +16,10 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import Axios from 'axios';
 import swal from 'sweetalert'
-import {Button , Icon , Input, Label} from 'semantic-ui-react'
+import {Button , Icon } from 'semantic-ui-react'
 import { urlApi } from '../support/urlApi';
 import {connect } from 'react-redux'
+import {Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import PageNotFound from './pageNotFound'
 
 const actionsStyles = theme => ({
@@ -118,9 +119,10 @@ class CustomPaginationActionsTable extends React.Component {
     rows: [],
     page: 0,
     rowsPerPage: 5,
-    isEdit : false,
+    modal : false,
     editItem : {},
     selectedFile : null,
+    selectedFileEdit : null,
     error : ''
 
   };
@@ -153,6 +155,15 @@ class CustomPaginationActionsTable extends React.Component {
     return value
   }
 
+  onChangeHandlerEdit = (event) => {
+    this.setState({selectedFileEdit : event.target.files[0]})
+  }
+
+  valueHandlerEdit = () => {
+  var value = this.state.selectedFileEdit ? this.state.selectedFileEdit.name : 'Pick a Picture'
+  return value
+  }
+
   onBtnAdd = () => {
       var newData = {product_name : this.refs.nama.value , price : this.refs.harga.value ,
                     discount : this.refs.diskon.value , category : this.refs.kategori.value , 
@@ -180,29 +191,65 @@ class CustomPaginationActionsTable extends React.Component {
         .catch((err) => console.log(err))
   }
 
-  onBtnEditClick = (param) => {
-    this.setState({isEdit : true , editItem : param})
-  }
-
   onBtnSave = () => {
-      var name = this.namaEdit.inputRef.value === "" ? this.state.editItem.nama : this.namaEdit.inputRef.value
-      var harga = this.hargaEdit.inputRef.value === "" ? this.state.editItem.harga : this.hargaEdit.inputRef.value
-      var diskon = this.discountEdit.inputRef.value === "" ? this.state.editItem.discount : this.discountEdit.inputRef.value
-      var kategori = this.categoryEdit.inputRef.value === "" ? this.state.editItem.kategori : this.categoryEdit.inputRef.value
-      var image = this.imageEdit.inputRef.value === "" ? this.state.editItem.img : this.imageEdit.inputRef.value
-      var deskripsi = this.deskripsiEdit.inputRef.value === "" ? this.state.editItem.deskripsi : this.deskripsiEdit.inputRef.value
-  
-      var NewData = {nama : name , harga : parseInt(harga) , discount : parseInt(diskon) , kategori , img : image ,deskripsi }
-      Axios.put(urlApi + '/products/' +this.state.editItem.id,NewData)
+    var data = {
+      product_name : this.refs.namaEdit.value ? this.refs.namaEdit.value : this.state.editItem.product_name ,
+      price : this.refs.hargaEdit.value ? this.refs.hargaEdit.value : this.state.editItem.price,
+      discount : this.refs.diskonEdit.value ? this.refs.diskonEdit.value : this.state.editItem.discount,
+      category : this.refs.kategoriEdit.value ? this.refs.kategoriEdit.value : this.state.editItem.category,
+      subcategory : this.refs.subkategoriEdit.value ? this.refs.subkategoriEdit.value : this.state.editItem.subcategory,
+      deskripsi : this.refs.deskripsiEdit.value ? this.refs.deskripsiEdit.value : this.state.editItem.deskripsi
+    }
+    if(this.state.selectedFileEdit){
+      alert(this.state.editItem.id)
+      var fd = new FormData()
+      fd.append('edit', this.state.selectedFileEdit)
+      fd.append('data' , JSON.stringify(data))
+      fd.append('imageBefore' , this.state.editItem.image)
+      Axios.put('http://localhost:2000/product/editproduct/'+ this.state.editItem.id,fd)
         .then((res) => {
-            this.getDataApi()
-            swal("Edit Success", "Product has been edited", "success")
-            this.setState({isEdit : false , editItem : {}})
+          swal("Product Edited", res.data, "success")  
+          this.getDataApi()
+          this.setState({modal:false})
         })
         .catch((err) => {
           console.log(err)
         })
+    }else {
+      Axios.put('http://localhost:2000/product/editproduct/'+ this.state.editItem.id, data)
+      .then((res) =>{
+        swal("Product Edited", res.data, "success")  
+        this.getDataApi()
+        this.setState({modal:false})
+      })
+      .catch((err) =>{
+        console.log(err)
+      })
     }
+    // var fd = new FormData()
+    // fd.append('image', this.state.selectedFile, this.state.selectedFile.name)
+    // fd.append('data' , JSON.stringify(data))
+  }
+
+  // onBtnSave1 = () => {
+  //     var name = this.namaEdit.inputRef.value === "" ? this.state.editItem.nama : this.namaEdit.inputRef.value
+  //     var harga = this.hargaEdit.inputRef.value === "" ? this.state.editItem.harga : this.hargaEdit.inputRef.value
+  //     var diskon = this.discountEdit.inputRef.value === "" ? this.state.editItem.discount : this.discountEdit.inputRef.value
+  //     var kategori = this.categoryEdit.inputRef.value === "" ? this.state.editItem.kategori : this.categoryEdit.inputRef.value
+  //     var image = this.imageEdit.inputRef.value === "" ? this.state.editItem.img : this.imageEdit.inputRef.value
+  //     var deskripsi = this.deskripsiEdit.inputRef.value === "" ? this.state.editItem.deskripsi : this.deskripsiEdit.inputRef.value
+  
+  //     var NewData = {nama : name , harga : parseInt(harga) , discount : parseInt(diskon) , kategori , img : image ,deskripsi }
+  //     Axios.put(urlApi + '/products/' +this.state.editItem.id,NewData)
+  //       .then((res) => {
+  //           this.getDataApi()
+  //           swal("Edit Success", "Product has been edited", "success")
+  //           this.setState({isEdit : false , editItem : {}})
+  //       })
+  //       .catch((err) => {
+  //         console.log(err)
+  //       })
+  //   }
 
   onBtnCancel = () => {
     this.setState({isEdit : false , editItem : {}})
@@ -233,7 +280,7 @@ class CustomPaginationActionsTable extends React.Component {
                   <TableCell><img src={ `http://localhost:2000/${val.image}`} width='50px' alt='...'/></TableCell>
                   <TableCell>{val.deskripsi}</TableCell>
                   <TableCell>
-                    <Button animated color ='teal' onClick={() => this.onBtnEditClick(val)}>
+                    <Button animated color ='teal' onClick={() => this.setState({modal :true , editItem: val})}>
                     <Button.Content visible >Edit </Button.Content>
                     <Button.Content hidden>
                         <Icon name='edit' />
@@ -256,7 +303,6 @@ class CustomPaginationActionsTable extends React.Component {
     const { classes } = this.props;
     const { rows, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-    var {nama, harga, discount, kategori, img, deskripsi} = this.state.editItem
     
     if(this.props.role === 'admin'){
     return (
@@ -339,48 +385,32 @@ class CustomPaginationActionsTable extends React.Component {
           </div>
       </div>
   {/* EDIT PRODUCT */}
-
-    {
-      this.state.isEdit === true ?
-      <Paper className='mt-3'>
-          <Table>
-              <TableHead>
-              <TableRow>
-                  <TableCell style={{fontSize:'20px', fontWeight:'600'}}>EDIT PRODUCT {nama}</TableCell>
-              </TableRow>
-              </TableHead>
-              <TableBody>
-                  <TableRow>
-                      <TableCell>
-                        <Input ref={input => this.namaEdit = input} placeholder={nama} className='mt-2 ml-2 mb-2'/>
-                      <Input  ref={input => this.hargaEdit = input} labelPosition='right' type='number' className='mt-2 ml-2 mb-2' placeholder={harga}>
-                            <Label basic>Rp</Label>
-                            <input />
-                            <Label>.00</Label>
-                        </Input>
-                        <Input ref={input => this.discountEdit = input} placeholder={discount} className='mt-2 ml-2 mb-2'/>
-                        <Input ref={input => this.categoryEdit = input} placeholder={kategori} className='mt-2 ml-2 mb-2'/>
-                        <Input ref={input => this.imageEdit = input} placeholder={img} className='mt-2 ml-2 mb-2'/>
-                        <Input ref={input => this.deskripsiEdit = input} placeholder={deskripsi} className='mt-2 ml-2 mb-2'/>
-                        <Button animated color ='teal' className='mt-2 ml-2 mb-2' onClick={this.onBtnSave}>
-                        <Button.Content visible>Save Changes</Button.Content>
-                        <Button.Content hidden>
-                            <Icon name='save' />
-                        </Button.Content>
-                        </Button>
-                        <Button animated color ='red' className='mt-2 ml-2 mb-2' onClick={this.onBtnCancel}>
-                        <Button.Content visible>Cancel</Button.Content>
-                        <Button.Content hidden>
-                            <Icon name='cancel' />
-                        </Button.Content>
-                        </Button>
-                      </TableCell>
-                  </TableRow>
-              </TableBody>
-          </Table>
-      </Paper>
-      : null
-    }
+  <div>
+        <Modal isOpen={this.state.modal} toggle={() => this.setState({modal:false})} className={this.props.className}>
+          <ModalHeader toggle={() => this.setState({modal:false})}>Edit Produk ~ {this.state.editItem.product_name}</ModalHeader>
+          <ModalBody>
+            <div className = "row">
+              <div className="col-md-3">
+                <img src={'http://localhost:2000/'+this.state.editItem.image} width='100%' alt='broken' />
+                <input type = "file" onChange={this.onChangeHandlerEdit} style={{display:"none"}} ref='inputEdit'/>
+                <input type="button" value={this.valueHandlerEdit()} className= "btn btn-primary" onClick={() => this.refs.inputEdit.click()}/>
+              </div>
+              <div className="col-md-9">
+                <input type = "text" className='form-control' ref='namaEdit' placeholder={this.state.editItem.product_name}/>
+                <input type = "number" className='form-control mt-3' ref='hargaEdit' placeholder={this.state.editItem.price}/>
+                <input type = "number" className='form-control' ref='diskonEdit' placeholder={this.state.editItem.discount}/>
+                <input type = "text" className='form-control mt-3' ref='kategoriEdit' placeholder={this.state.editItem.category}/>
+                <input type = "text" className='form-control mt-3' ref='subkategoriEdit' placeholder={this.state.editItem.subcategory}/>
+                <input type = "text" className='form-control mt-3' ref='deskripsiEdit' placeholder={this.state.editItem.deskripsi}/>
+              </div>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={() => this.onBtnSave()}>Save</Button>{' '}
+            <Button color="secondary" onClick={() => this.setState({modal:false})}>Cancel</Button>
+          </ModalFooter>
+        </Modal>
+        </div>
       </div>
     );
   } else {
