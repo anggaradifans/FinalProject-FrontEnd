@@ -16,9 +16,9 @@ class ProductDetail extends React.Component {
     
     getDataApi = () => {
         var idUrl = this.props.match.params.id
-        Axios.get(urlApi+'/products/'+idUrl)
+        Axios.get(urlApi+'/product/product-detail/'+idUrl)
         .then((res) => {
-            this.setState({product: res.data})
+            this.setState({product: res.data[0]})
         })
         .catch((err) => {
             console.log(err)
@@ -91,17 +91,17 @@ class ProductDetail extends React.Component {
     
     
     render(){
-        var {nama, img, discount, deskripsi, harga} = this.state.product
+        var {product_name, image, discount, deskripsi, price} = this.state.product
         return (
             <div className ='container'>
-                <div className="row">
-                    <div className="col-md-4">
+                <div className="row justify-content-center">
+                    <div className="col-md-4 mt-5 mb-5">
                         <div className="card" style={{width: '100%'}}>
-                            <img className="card-img-top" src={img} alt="Card cap" />
+                            <img className="card-img-top" src={`http://localhost:2000/${image}`} alt="Card cap" />
                         </div>
                     </div>
-                    <div className="col-md-8">
-                        <h1 style={{color : '#4C4C4C'}}>{nama}</h1>
+                    <div className="col-md-8 mt-5 mb-5">
+                        <h1 style={{color : '#4C4C4C'}}>{product_name}</h1>
                         { discount > 0 ?
                             <div style={{backgroundColor:'#D50000', 
                                     width:"50px" , height:"22px" , 
@@ -109,10 +109,10 @@ class ProductDetail extends React.Component {
                                     display:'inline-block'}}>{discount}%</div> : null
                         }
                         { discount > 0 ? 
-                            <CurrencyFormat value={harga} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <span style={{fontSize:'12px', fontWeight:'600', color:'#606060' , 
+                            <CurrencyFormat value={price} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <span style={{fontSize:'12px', fontWeight:'600', color:'#606060' , 
                             marginLeft:'10px', textDecoration:"line-through"}}>{value}</span>}/>
                              : null}
-                        <CurrencyFormat value={harga - (harga*(discount/100))} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <div style={{fontSize:'24px', fontWeight : '700', 
+                        <CurrencyFormat value={price - (price*(discount/100))} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <div style={{fontSize:'24px', fontWeight : '700', 
                                     color:'#FF5722', marginTop:'20px'}}>{value} </div>}/>
                         <div className="row">
                             <div className="col-md-2">

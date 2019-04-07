@@ -68,20 +68,19 @@ class ProductList extends React.Component{
     renderProdukJsx = () => {
         var jsx = this.state.listProduct.map((val) => {
                 return <div className="card col-md-3" style={{width: '18rem', margin: '20px'}}>
-                        <Link to={'/product-detail/' + val.id} ><img src={val.img} style={{width :'250px', height :'250px'}} className="card-img-top img" alt="Card cap" /></Link>
+                        <Link to={'/product-detail/' + val.id} ><img src={ `http://localhost:2000/${val.image}`} style={{width :'250px', height :'250px'}} className="card-img-top img" alt="Card cap" /></Link>
                         {val.discount > 0 ? 
                         <div className="discount">{val.discount}%</div>
                         : null
                         }
-                        <div className="kategori mb-2">{val.subkategori}</div>
+                        <div className="kategori mt-1 mb-2">{val.subcategory}</div>
                             <div className="card-body">
-                                <h4>{val.product_name}</h4>
+                                <h5>{val.product_name}</h5>
                                 { val.discount > 0 ?
                                     <CurrencyFormat value={val.price} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <p className="card-text mr-5" style={{textDecoration:'line-through', color:'red', display:'inline'}}>{value}</p>}/>
                                     : null
                                 }
                                 <CurrencyFormat value={val.price - (val.price*(val.discount/100))} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <p className="card-text mr-5" style={{display:'inline',fontWeight:'700'}}>{value}</p>}/>
-                                <p className="mt-2">{val.deskripsi}</p>
                                 { this.props.username === "" ?
                                 <Link to='/login'><input type='button' className="btn btn-primary" value="Add to Cart"/></Link> :
                                 <input type='button' className="btn btn-primary" value="Add to Cart" onClick={() => this.onBtnAddtoCart(val)}/>
