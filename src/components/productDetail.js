@@ -141,11 +141,11 @@ class ProductDetail extends React.Component {
                             <input type='button' className='btn btn-outline-success col-md-3 ml-2' value='Add to Cart' onClick={() => this.onBtnCart()}/>
                         </div>
                         : 
-                        <div className="row mt-4">
-                            <Link to='/login'><input type='button' className='btn btn-outline-secondary col-md-2 ml-3' value='Add to Wishlist'/></Link>
-                            <Link to='/login'><input type='button' className='btn btn-outline-danger col-md-3 ml-2' value='Buy Now'/></Link>
-                            <Link to='/login'><input type='button' className='btn btn-outline-success col-md-3 ml-2' value='Add to Cart'/></Link>
-                        </div>
+                        <Link to='/login'><div className="row mt-4">
+                            <input type='button' className='btn btn-outline-secondary col-md-2 ml-3' value='Add to Wishlist'/>
+                            <input type='button' className='btn btn-outline-danger col-md-3 ml-2' value='Buy Now'/>
+                            <input type='button' className='btn btn-outline-success col-md-3 ml-2' value='Add to Cart'/>
+                        </div></Link>
                         }
                     </div>
                 </div>

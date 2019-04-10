@@ -3,6 +3,7 @@ import React from 'react'
 // import {Link} from 'react-router-dom'
 import Carousel from './carousel'
 import Hover from './hover';
+import GreatDeal from './greatDeal';
 
 
 class Homepage extends React.Component{
@@ -12,9 +13,12 @@ class Homepage extends React.Component{
           <div className="row justify-content-center">
             <Carousel/>
           </div>
-          <div className="container mt-5 mb-5"> 
-            <h1 className='blue-gradient text-white rounded-pill shadow-lg' style={{textAlign:"center"}}> Selamat Datang di Online Game Shop kami </h1>
-            <h2 style={{textAlign:"center", fontWeight:"700"}}>Produk Kami</h2>
+          <div className="ml-1 mt-5 mb-5"> 
+            <h1 className='blue-gradient text-white rounded-pill shadow-lg' style={{textAlign:"center"}}> Welcome to Jual2Game.com </h1>
+            <h2 style={{textAlign:"center", fontWeight:"700"}}>Great Deals</h2>            
+            <hr/>
+            <GreatDeal/>
+            <h2 style={{textAlign:"center", fontWeight:"700"}}>Our Products</h2>
             <hr/>
           </div>
           <Hover/>

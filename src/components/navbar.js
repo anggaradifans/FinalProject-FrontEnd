@@ -32,6 +32,13 @@ class HeaderKu extends Component{
         this.props.resetCount()
     }
 
+    // onBtnSearch = () => {
+    //     var search = this.refs.searchBook.value
+    //     var searchValue = search.replace(/ /g,"%20")
+    //     alert(searchValue)
+    //     this.props.getSearchData(searchValue)
+    // }
+
     render(){ 
             if(this.props.username === ""){
                 return(
@@ -45,7 +52,7 @@ class HeaderKu extends Component{
                                     <div className="input-group mt-1" style={{width:"350px"}}>
                                         <input type="text" ref="searchBook" className="form-control" placeholder="Masukkan kata kunci ... " />
                                         <div className="input-group-append " style={{marginTop:"-5px", height:"42px"}}>
-                                            <button className="btn blue-gradient mb-1" type="button" id="button-addon2"><i className="fas fa-search" /></button>
+                                        <button className="btn blue-gradient mb-1" type="button" id="button-addon2" onClick={this.onBtnSearch}><i className="fas fa-search" /></button>
                                         </div>
                                     </div> 
                                     </NavItem>
@@ -72,7 +79,7 @@ class HeaderKu extends Component{
                                     <div className="input-group mt-2" style={{width:"350px"}}>
                                         <input type="text" ref="searchBook" className="form-control" placeholder="Masukkan kata kunci ... " />
                                         <div className="input-group-append mr-2" style={{marginTop:"-5px", height:"42px"}}>
-                                            <button className="btn blue-gradient mb-1" type="button" id="button-addon2"><i className="fas fa-search" /></button>
+                                        <button className="btn blue-gradient mb-1" type="button" id="button-addon2" onClick={this.onBtnSearch}><i className="fas fa-search" /></button>
                                         </div>
                                     </div> 
                                     </NavItem>
@@ -84,7 +91,14 @@ class HeaderKu extends Component{
                                         {this.props.role === 'admin' ?
                                         <Link to="/manage"><DropdownItem>
                                         Manage Products
-                                        </DropdownItem></Link> : null
+                                        </DropdownItem></Link>
+                                         : null
+                                        }
+                                        {this.props.role === 'admin' ?
+                                        <Link to="/category"><DropdownItem>
+                                        Manage Category
+                                        </DropdownItem></Link>
+                                        : null
                                         }
                                         <Link to='/history'><DropdownItem>
                                             Transaction History
@@ -123,7 +137,8 @@ const mapStateToProps = (state) => {
     return {
         username : state.user.username,
         role : state.user.role,
-        cart : state.cart.cart
+        cart : state.cart.cart,
+    
     }
 }
 

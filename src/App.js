@@ -3,9 +3,12 @@ import Navbar from './components/navbar'
 import Home from './components/homepage'
 import Login from './components/login'
 import Register from './components/register'
+import Verify from './components/verify'
 import Product from './components/productList'
-import Search from './components/search'
+import PS4Videogames from './components/ps4videogames'
+import Search from './components/searchData'
 import ManageProduct from './components/manageProduct'
+import ManageCategory from './components/manageCategory'
 import PageNotFound from  './components/pageNotFound'
 import ProductDetail from './components/productDetail'
 import ScrolltoTop from  './components/scrolltoTop'
@@ -48,9 +51,12 @@ class App extends Component {
           <Route path='/' component={Home} exact/>
           <Route path='/login' component={Login} exact/>
           <Route path='/register' component={Register} exact/>
+          <Route path='/verify' component={Verify} exact/>
           <Route path='/products' component={Product} exact/>
+          <Route path='/ps4videogames' component={PS4Videogames} exact/>
           <Route path='/search' component={Search} exact/>
           <Route path='/manage' component={ManageProduct} exact/>
+          <Route path='/category' component={ManageCategory} exact/>
           <Route path='/product-detail/:id' component={ProductDetail} exact/>
           <Route path='/cart' component={Cart} exact/>
           <Route path='/history' component={History} exact/>

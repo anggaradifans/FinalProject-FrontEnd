@@ -117,6 +117,8 @@ const styles = theme => ({
 class CustomPaginationActionsTable extends React.Component {
   state = {
     rows: [],
+    category : [],
+    subcategory : [],
     page: 0,
     rowsPerPage: 5,
     modal : false,
@@ -129,11 +131,25 @@ class CustomPaginationActionsTable extends React.Component {
 
   componentDidMount(){
     this.getDataApi()
+    this.getCategory()
+    this.getSubcategory()
   }
 
   getDataApi = () => {
       Axios.get(urlApi + '/product/products')
       .then((res) => this.setState({rows : res.data}) )
+      .catch((err) => console.log(err))
+  }
+
+  getCategory = () => {
+    Axios.get(urlApi + '/product/category')
+      .then((res) => this.setState({category : res.data}))
+      .catch((err) => console.log(err))
+  }
+
+  getSubcategory = () => {
+    Axios.get(urlApi + '/product/subcategory')
+      .then((res) => this.setState({subcategory : res.data}))
       .catch((err) => console.log(err))
   }
 
@@ -213,7 +229,6 @@ class CustomPaginationActionsTable extends React.Component {
       deskripsi : this.refs.deskripsiEdit.value ? this.refs.deskripsiEdit.value : this.state.editItem.deskripsi
     }
     if(this.state.selectedFileEdit){
-      alert(this.state.editItem.id)
       var fd = new FormData()
       fd.append('edit', this.state.selectedFileEdit)
       fd.append('data' , JSON.stringify(data))
@@ -290,6 +305,20 @@ class CustomPaginationActionsTable extends React.Component {
       return jsx
   }
 
+  DropdownCategory = () => {
+      var jsx = this.state.category.map((val) => {
+        return <option value={val.id}>{val.category}</option>
+      })
+      return jsx
+  }
+
+  DropdownSubcategory = () => {
+    var jsx = this.state.subcategory.map((val) => {
+      return <option value={val.id}>{val.subcategory}</option>
+    })
+    return jsx
+  }
+
   render() {
     const { classes } = this.props;
     const { rows, rowsPerPage, page } = this.state;
@@ -350,8 +379,12 @@ class CustomPaginationActionsTable extends React.Component {
               <input className="form-control mb-1" ref="diskon" type="number" placeholder='Masukkan diskon barang'/>
           </div>
           <div className= 'col-md-4'>
-              <input className="form-control mb-1" ref ="kategori" type="text" placeholder='Masukkan kategori'/>
-              <input className="form-control mb-1" ref="subkategori" type="text" placeholder='Masukkan subkategori'/>
+              <select ref = 'kategori' className="form-control">
+              {this.DropdownCategory()}
+              </select>
+              <select ref = 'subkategori' className="form-control">
+              {this.DropdownSubcategory()}
+              </select>
               <textarea className="form-control mb-1" ref="deskripsi" rows="3" placeholder='Masukkan deskripsi'/>
           </div>
           <div className= 'col-md-3'>

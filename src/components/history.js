@@ -57,7 +57,6 @@ class History extends React.Component{
                         </thead>
                         <tbody>
                             {this.renderJsx()}
-                            
                         </tbody>
                     </table>
             </div>
