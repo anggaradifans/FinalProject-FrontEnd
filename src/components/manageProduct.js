@@ -142,13 +142,13 @@ class CustomPaginationActionsTable extends React.Component {
   }
 
   getCategory = () => {
-    Axios.get(urlApi + '/product/category')
+    Axios.get(urlApi + '/category/category')
       .then((res) => this.setState({category : res.data}))
       .catch((err) => console.log(err))
   }
 
   getSubcategory = () => {
-    Axios.get(urlApi + '/product/subcategory')
+    Axios.get(urlApi + '/category/subcategory')
       .then((res) => this.setState({subcategory : res.data}))
       .catch((err) => console.log(err))
   }
