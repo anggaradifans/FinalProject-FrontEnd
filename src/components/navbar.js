@@ -5,7 +5,7 @@ import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Un
     DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux'
-import {resetUser, resetCount} from './../1.actions'
+import {resetUser, resetCount, getSearchData} from './../1.actions'
 import cookie from 'universal-cookie'
 
 const objCookie = new cookie()
@@ -25,6 +25,10 @@ class HeaderKu extends Component{
        });
     }
 
+    state = {
+        searchData : ''
+    }
+
 
     onBtnLogOut = () => {
         objCookie.remove('userData')
@@ -32,27 +36,21 @@ class HeaderKu extends Component{
         this.props.resetCount()
     }
 
-    // onBtnSearch = () => {
-    //     var search = this.refs.searchBook.value
-    //     var searchValue = search.replace(/ /g,"%20")
-    //     alert(searchValue)
-    //     this.props.getSearchData(searchValue)
-    // }
-
     render(){ 
             if(this.props.username === ""){
                 return(
                     <div style={{marginBottom:"75px", marginTop:"-15px"}}>
                         <Navbar className="stylish-color-dark" light expand="md" fixed="top">
-                            <NavbarBrand className="ml-2" ><Link to='/'> <img src="http://lofrev.net/wp-content/photos/2016/08/random_logo_1.png" alt="brand" width="40px" /> </Link> </NavbarBrand>
+                        <NavbarBrand className="ml-2" style={{fontFamily: 'Pacifico', fontSize:"30px"}}><Link to='/'>WG</Link> </NavbarBrand>
+                            <NavbarToggler onClick={this.toggle} />
                             <NavbarToggler onClick={this.toggle} />
                             <Collapse isOpen={this.state.isOpen} navbar>
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
                                     <div className="input-group mt-1" style={{width:"350px"}}>
-                                        <input type="text" ref="searchBook" className="form-control" placeholder="Masukkan kata kunci ... " />
+                                        <input type="text" ref="searchBook" onChange={() => this.setState({searchData:this.refs.searchBook.value})} className="form-control form-control-sm" placeholder="Masukkan kata kunci ... " />
                                         <div className="input-group-append " style={{marginTop:"-5px", height:"42px"}}>
-                                        <button className="btn blue-gradient mb-1" type="button" id="button-addon2" onClick={this.onBtnSearch}><i className="fas fa-search" /></button>
+                                        <Link to={'/product?q='+this.state.searchData}><button className="btn btn-sm blue-gradient mb-1" type="button" id="button-addon2"><i className="fas fa-search" /></button></Link>
                                         </div>
                                     </div> 
                                     </NavItem>
@@ -71,15 +69,15 @@ class HeaderKu extends Component{
                 return(
                     <div style={{marginBottom:"75px", marginTop:"-15px"}}>
                         <Navbar className="stylish-color-dark" light expand="md" fixed="top">
-                            <NavbarBrand className="ml-2" ><Link to='/'> <img src="http://www.logospng.com/images/43/letter-f-bootstrap-logos-43177.png" alt="brand" width="30px" /> </Link> </NavbarBrand>
+                        <NavbarBrand className="ml-2" style={{fontFamily: 'Pacifico', fontSize:"30px"}}><Link to='/'>WG</Link> </NavbarBrand>
                             <NavbarToggler onClick={this.toggle} />
                             <Collapse isOpen={this.state.isOpen} navbar>
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
                                     <div className="input-group mt-2" style={{width:"350px"}}>
-                                        <input type="text" ref="searchBook" className="form-control" placeholder="Masukkan kata kunci ... " />
-                                        <div className="input-group-append mr-2" style={{marginTop:"-5px", height:"42px"}}>
-                                        <button className="btn blue-gradient mb-1" type="button" id="button-addon2" onClick={this.onBtnSearch}><i className="fas fa-search" /></button>
+                                        <input type="text" ref="searchBook" onChange={() => this.props.getSearchData(this.refs.searchBook.value)} className="form-control" placeholder="Masukkan kata kunci ... " />
+                                        <div className="input-group-append mr-2" style={{marginTop:"-6px", height:"42px"}}>
+                                        <Link to={'/products?q='+this.props.search}><button className="btn blue-gradient mb-1" type="button" id="button-addon2" style={{height:"35px"}}><i className="fas fa-search" /></button></Link>
                                         </div>
                                     </div> 
                                     </NavItem>
@@ -117,11 +115,8 @@ class HeaderKu extends Component{
                                     <NavItem>
                                         <NavLink style={{color:"white", marginTop:"5px"}}> Hello, {this.props.username} </NavLink>
                                     </NavItem>
-                                    {/* <NavItem>
-                                        <NavLink style={{color:"white"}}> {this.props.cart} Cart(s) </NavLink>
-                                    </NavItem> */}
                                     <NavItem>
-                                        <Link to="/cart"><NavLink className="btn btn-default border-primary btn-sm" style={{fontSize:"14px"}}><i class="fas fa-shopping-cart"></i> Cart</NavLink></Link>
+                                        <Link to="/cart"><NavLink className="btn btn-default border-primary btn-sm" style={{fontSize:"14px"}}><i class="fas fa-shopping-cart"></i> {this.props.cart ? this.props.cart : null} Cart(s)</NavLink></Link>
                                     </NavItem>
                                    
                                 </Nav>
@@ -138,10 +133,11 @@ const mapStateToProps = (state) => {
         username : state.user.username,
         role : state.user.role,
         cart : state.cart.cart,
+        search : state.search.searchData
     
     }
 }
 
 
 
-export default connect(mapStateToProps,{resetUser, resetCount})(HeaderKu);
+export default connect(mapStateToProps,{resetUser, resetCount, getSearchData})(HeaderKu);

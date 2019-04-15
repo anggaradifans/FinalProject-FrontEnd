@@ -33,60 +33,18 @@ class ProductDetail extends React.Component {
     
 
     onBtnCart = () => {
-        Axios.get( urlApi + '/products?id='+ this.state.product.id )
+        var qty = this.refs.jumlah.value
+        var newData = {
+            userId : this.props.id,
+            productId : this.state.product.id,
+            quantity : qty
+        }
+       Axios.post(urlApi+'/cart/addtocart', newData)
         .then((res) => {
-            var username = this.props.username
-            var userId = this.props.id
-            var productId = res.data[0].id
-            var namaProduk = res.data[0].nama
-            var harga = res.data[0].harga
-            var discount = res.data[0].discount
-            var kategori = res.data[0].kategori
-            var img = res.data[0].img
-            var quantity = parseInt(this.refs.jumlah.value)
-            var newData = {
-                username, userId, productId, namaProduk, 
-                harga, discount, kategori, img, quantity
-            }
-            Axios.get(urlApi+'/cart?userId='+this.props.id+'&productId='+newData.productId)
-                .then((res)=> {
-                    console.log(res)
-                    if(res.data.length > 0){
-                        var username = this.props.username
-                        var userId = this.props.id
-                        var productId = newData.productId
-                        var namaProduk = res.data[0].namaProduk
-                        var harga = res.data[0].harga
-                        var discount = res.data[0].discount
-                        var kategori = res.data[0].kategori
-                        var img = res.data[0].img
-                        quantity = res.data[0].quantity+parseInt(this.refs.jumlah.value)
-                        var editedData = {
-                            username, userId, productId, namaProduk, 
-                            harga, discount, kategori, img, quantity
-                        }
-                    Axios.put(urlApi+'/cart/'+res.data[0].id, editedData)
-                        .then((res) => {
-                            console.log(res)
-                            swal('Success', 'Item added to Cart', 'success')
-                        })
-                        .catch((err) => {
-                            console.log(err)
-                        })
-                    } else {
-                    Axios.post(urlApi + '/cart', newData)
-                        .then((res) => {
-                            console.log(res)
-                            swal('Success', "Item added to Cart", 'success')
-                            this.props.fnHitungCart(this.props.username)
-                            })
-                        .catch((err) => {
-                                console.log(err)
-                            })
-                }
-                })
-            })
-            .catch((err) => console.log(err))
+           swal("Thanks for the Purchase", res.data, "success")
+           this.props.fnHitungCart(this.props.username)
+        })
+        .catch((err) => console.log(err))
     }
     
     
@@ -118,7 +76,7 @@ class ProductDetail extends React.Component {
                             <div className="col-md-2">
                                 <div style={{marginTop:"10px" ,color:"#606060" , 
                                             fontWeight:"700", fontSize:"14px"}}>Jumlah</div>
-                                <input type='number' ref ='jumlah' min={1} placeholder={1} className='form-control'  onChange={this.proteksiJumlah} style={{width : '60px' , 
+                                <input type='number' ref ='jumlah' min={1} defaultValue={1} className='form-control'  onChange={this.proteksiJumlah} style={{width : '60px' , 
                                             marginTop:'10px'}}/>
                             </div>
                             <div className="col-md-6">

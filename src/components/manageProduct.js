@@ -136,7 +136,7 @@ class CustomPaginationActionsTable extends React.Component {
   }
 
   getDataApi = () => {
-      Axios.get(urlApi + '/product/products')
+      Axios.get(urlApi + '/product/manageproducts')
       .then((res) => this.setState({rows : res.data}) )
       .catch((err) => console.log(err))
   }
@@ -410,10 +410,14 @@ class CustomPaginationActionsTable extends React.Component {
               <div className="col-md-9">
                 <input type = "text" className='form-control' ref='namaEdit' placeholder={this.state.editItem.product_name}/>
                 <input type = "number" className='form-control mt-3' ref='hargaEdit' placeholder={this.state.editItem.price}/>
-                <input type = "number" className='form-control' ref='diskonEdit' placeholder={this.state.editItem.discount}/>
-                <input type = "text" className='form-control mt-3' ref='kategoriEdit' placeholder={this.state.editItem.category}/>
-                <input type = "text" className='form-control mt-3' ref='subkategoriEdit' placeholder={this.state.editItem.subcategory}/>
-                <input type = "text" className='form-control mt-3' ref='deskripsiEdit' placeholder={this.state.editItem.deskripsi}/>
+                <input type = "number" className='form-control mt-3' ref='diskonEdit' placeholder={this.state.editItem.discount}/>
+                <select ref = 'kategoriEdit' className="form-control mt-3">
+                {this.DropdownCategory()}
+                </select>
+                <select ref = 'subkategoriEdit' className="form-control mt-3">
+                {this.DropdownSubcategory()}
+                </select>
+                <textarea className='form-control mt-3' ref='deskripsiEdit' placeholder={this.state.editItem.deskripsi} rows="3"/>
               </div>
             </div>
           </ModalBody>

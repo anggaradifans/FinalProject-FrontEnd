@@ -1,15 +1,13 @@
 import Axios from "axios";
 import { urlApi } from "../support/urlApi";
 
-export const fnHitungCart = (int) => {
+export const fnHitungCart = (id) => {
     return(dispatch) => {
-        Axios.get(urlApi+'/users?username='+int).then((res) => {
-                Axios.get(urlApi + '/cart?userId='+res.data[0].id).then((res) =>
+        Axios.get(urlApi+'/cart/cartcount/'+id).then((res) => {
                 dispatch({
                         type : 'JUMLAH_CART',
                         payload : res.data.length
                     })
-                )    
             })
             
     }

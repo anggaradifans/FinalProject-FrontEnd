@@ -73,7 +73,6 @@ class ProductList extends React.Component{
                         <div className="discount">{val.discount}%</div>
                         : null
                         }
-                        <div className="kategori mt-1 mb-2">{val.subcategory}</div>
                             <div className="card-body">
                                 <h5>{val.product_name}</h5>
                                 { val.discount > 0 ?

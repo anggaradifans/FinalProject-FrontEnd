@@ -129,7 +129,7 @@ class CustomPaginationActionsTable extends React.Component {
   }
 
   getDataApi = () => {
-      Axios.get(urlApi + '/cart?userId=' + this.props.id)
+      Axios.get(urlApi + '/cart/showcart/' + this.props.id)
       .then((res) => { console.log(res)
           this.setState({rows : res.data})
         })
@@ -178,7 +178,7 @@ class CustomPaginationActionsTable extends React.Component {
   }
 
   onBtnDelete = (id) => {
-      Axios.delete(urlApi + '/cart/' + id)
+      Axios.delete(`${urlApi}/cart/deletecart/${id}`)
         .then((res) => {
             this.getDataApi()
             this.props.fnHitungCart(this.props.username)
@@ -189,7 +189,7 @@ class CustomPaginationActionsTable extends React.Component {
   getTotalHarga = ()=>{
     var harga=0
      for (var i=0;i<this.state.rows.length;i++){
-        harga += parseInt((this.state.rows[i].harga - (this.state.rows[i].harga *this.state.rows[i].discount/100))*this.state.rows[i].quantity)
+        harga += parseInt((this.state.rows[i].price - (this.state.rows[i].price *this.state.rows[i].discount/100))*this.state.rows[i].quantity)
      }
      return harga
      
@@ -291,10 +291,10 @@ class CustomPaginationActionsTable extends React.Component {
                   <TableCell component="th" scope="row">
                     {val.namaProduk}
                   </TableCell>
-                  <TableCell>Rp. {val.harga - (val.harga*(val.discount/100))}</TableCell>
+                  <TableCell>Rp. {val.price - (val.price*(val.discount/100))}</TableCell>
                   <TableCell>{val.discount}%</TableCell>
-                  <TableCell>{val.kategori}</TableCell>
-                  <TableCell><img src={val.img} width='50px' alt='...'/></TableCell>
+                  <TableCell>{val.category}</TableCell>
+                  <TableCell>{val.subcategory}</TableCell>
                   <TableCell>{val.quantity}</TableCell>
                   <TableCell>
                     <Button animated color ='teal' onClick={() => this.onBtnEditClick(val)}>
@@ -336,7 +336,7 @@ class CustomPaginationActionsTable extends React.Component {
                         <TableCell style={{fontSize:'20px', fontWeight:'600'}}>HARGA</TableCell>
                         <TableCell style={{fontSize:'20px', fontWeight:'600'}}>DISC</TableCell>
                         <TableCell style={{fontSize:'20px', fontWeight:'600'}}>CAT</TableCell>
-                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>IMG</TableCell>
+                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>SUB</TableCell>
                         <TableCell style={{fontSize:'20px', fontWeight:'600'}}>QTY</TableCell>
                     </TableRow>
                 </TableHead>
