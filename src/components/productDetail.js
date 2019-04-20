@@ -94,9 +94,9 @@ class ProductDetail extends React.Component {
 
                         {this.props.username !== "" ?
                          <div className="row mt-4">
-                            <input type='button' className='btn btn-outline-secondary col-md-2 ml-3' value='Add to Wishlist' />
-                            <input type='button' className='btn btn-outline-danger col-md-3 ml-2' value='Buy Now'/>
-                            <input type='button' className='btn btn-outline-success col-md-3 ml-2' value='Add to Cart' onClick={() => this.onBtnCart()}/>
+                            <input type='button' className='btn btn-secondary ml-3' value='Add to Wishlist' />
+                            <Link to={'/cart/showcart/' + this.props.id}><button className='btn btn-danger ml-2' onClick={() => this.onBtnCart()}>Buy Now</button></Link>
+                            <input type='button' className='btn btn-success  ml-2' value='Add to Cart' onClick={() => this.onBtnCart()}/>
                         </div>
                         : 
                         <Link to='/login'><div className="row mt-4">

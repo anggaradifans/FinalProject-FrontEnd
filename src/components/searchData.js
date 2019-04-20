@@ -5,73 +5,41 @@ import './../support/css/product.css'
 import CurrencyFormat from 'react-currency-format'
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux'
-import swal from 'sweetalert'
-import {fnHitungCart} from './../1.actions'
+import {fnHitungCart, getSearchData} from './../1.actions'
+import QueryString from 'query-string'
 
 class Search extends React.Component{
-    state = {listProduct : [], cart : 0}
+    state = {listProduct : []}
 
     componentDidMount(){
         this.getDataProduct()
+        this.getDataUrl()
     }
 
     getDataProduct = () => {
-         this.setState({listProduct : this.props.search})
+        axios.get( urlApi + '/product/products')
+        .then((res) => this.setState({listProduct : res.data}))
+        .catch((err)=> console.log(err))
     }
 
-    onBtnAddtoCart = (data) => {    
-           axios.get(urlApi+'/products?id='+ data.id)
-            .then((res) => {
-                var username = this.props.username
-                var userId = this.props.id
-                var productId = res.data[0].id
-                var namaProduk = res.data[0].nama
-                var harga = res.data[0].harga
-                var discount = res.data[0].discount
-                var kategori = res.data[0].kategori
-                var img = res.data[0].img
-
-                var newData = {
-                    username, userId, productId, namaProduk,
-                    harga, discount, kategori, img
-                }
-                axios.get(urlApi+'/cart?userId='+this.props.id+'&productId='+newData.productId)
-                    .then((res) => {
-                        if(res.data.length > 0){
-                            var quantity = res.data[0].quantity+1
-                            axios.put(urlApi+'/cart/'+res.data[0].id,{...newData, quantity})
-                                .then((res) =>{
-                                    console.log(res)
-                                    swal('Success', 'Item added to Cart', 'success')
-                                })
-                                .catch((err) => {
-                                    console.log(err)
-                                }) 
-                        } else {
-                            axios.post(urlApi+'/cart', {...newData, quantity : 1})
-                                .then((res) =>{
-                                    console.log(res)
-                                    swal('Success', 'Item added to Cart', 'success')
-                                    this.props.fnHitungCart(this.props.username)
-                                })
-                                .catch((err) => {
-                                    console.log(err)
-                                })
-                        }
-                    })
-            })
-            .catch((err) => console.log(err))
+    getDataUrl = () => {
+        var obj = QueryString.parse(this.props.location.search)
+        if(this.props.location.search){
+            this.props.getSearchData(obj.q.toLowerCase())
+        }
     }
 
     renderProdukJsx = () => {
-        var jsx = this.state.listProduct.map((val) => {
+        var arrSearchAndFilter = this.state.listProduct.filter((val) => {
+            return val.product_name.toLowerCase().includes(this.props.search)
+        })
+        var jsx = arrSearchAndFilter.map((val) => {
                 return <div className="card col-md-3" style={{width: '18rem', margin: '20px'}}>
                         <Link to={'/product-detail/' + val.id} ><img src={ `http://localhost:2000/${val.image}`} style={{width :'250px', height :'250px'}} className="card-img-top img" alt="Card cap" /></Link>
                         {val.discount > 0 ? 
                         <div className="discount">{val.discount}%</div>
                         : null
                         }
-                        <div className="kategori mt-1 mb-2">{val.subcategory}</div>
                             <div className="card-body">
                                 <h5>{val.product_name}</h5>
                                 { val.discount > 0 ?
@@ -79,11 +47,6 @@ class Search extends React.Component{
                                     : null
                                 }
                                 <CurrencyFormat value={val.price - (val.price*(val.discount/100))} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <p className="card-text mr-5" style={{display:'inline',fontWeight:'700'}}>{value}</p>}/>
-                                { this.props.username === "" ?
-                                <Link to='/login'><input type='button' className="btn btn-primary" value="Add to Cart"/></Link> :
-                                <input type='button' className="btn btn-primary" value="Add to Cart" onClick={() => this.onBtnAddtoCart(val)}/>
-                                }
-                                
                             </div>
                     </div>
         })
@@ -91,8 +54,15 @@ class Search extends React.Component{
     }
 
     render(){
+        var arrSearchAndFilter = this.state.listProduct.filter((val) => {
+            return val.product_name.toLowerCase().includes(this.props.search)
+        })
         return (
         <div className="container">
+            <div className="row justify-content-center">
+            <h3 style={{margin : "10px"}}>Search Result(s) for '{this.props.search}' : {arrSearchAndFilter.length}</h3>
+            </div>
+
             <div className="row justify-content-center">
             {this.renderProdukJsx()}
             </div>
@@ -109,4 +79,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {fnHitungCart})(Search)
+export default connect(mapStateToProps, {fnHitungCart, getSearchData})(Search)

@@ -116,18 +116,11 @@ const styles = theme => ({
 
 class CustomPaginationActionsTable extends React.Component {
   state = {
-    rows: [],
-    category : [],
-    subcategory : [],
-    page: 0,
-    rowsPerPage: 5,
-    modal : false,
-    editItem : {},
-    selectedFile : null,
-    selectedFileEdit : null,
-    error : ''
-
-  };
+    rows: [], category : [], subcategory : [],
+    page: 0,rowsPerPage: 5,modal : false,
+    editItem : {}, selectedFile : null, selectedFileEdit : null,
+    error : '', searchData : '' , filterCategory : 6, filterSub : 4
+  }
 
   componentDidMount(){
     this.getDataApi()
@@ -178,6 +171,11 @@ class CustomPaginationActionsTable extends React.Component {
   valueHandlerEdit = () => {
   var value = this.state.selectedFileEdit ? this.state.selectedFileEdit.name : 'Pick a Picture'
   return value
+  }
+
+  onBtnSearchClick =() => {
+    var search = this.refs.inputsearch.value
+    this.setState({searchData : search.toLowerCase()})
   }
 
   onBtnAdd = () => {
@@ -273,7 +271,10 @@ class CustomPaginationActionsTable extends React.Component {
   }
 
   renderJsx = () => {
-      var jsx = this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((val) => {
+      var arrSearch = this.state.rows.filter((val) => {
+        return val.product_name.toLowerCase().startsWith(this.state.searchData)
+      })
+      var jsx = arrSearch.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((val) => {
           return (
                 <TableRow key={val.id}>
                  <TableCell>{val.id}</TableCell>
@@ -327,6 +328,15 @@ class CustomPaginationActionsTable extends React.Component {
     if(this.props.role === 'admin'){
     return (
     <div className = 'container'>
+      <h2>Manage Product</h2>
+      <div className='row mb-3'>
+                    <div className='col-md-3'> 
+                    <input type='text' ref='inputsearch' placeholder='Search Product' className='form-control' /> 
+                    </div>
+                    <div className='col-md-1' style={{marginTop:"-5px"}}> 
+                    <input type='button' onClick={this.onBtnSearchClick} className='btn btn-info' value='search'/>
+                    </div>
+                </div>
       <Paper className={classes.root}>
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>

@@ -182,10 +182,7 @@ class ProductList extends React.Component{
                     </select>
                     </div>
                     <div className='col-md-1' style={{marginTop:"-5px"}}> 
-                    <input type='button' onClick={this.onBtnSearchClick} className='btn btn-sm btn-info' value='search'/>
-                    </div>
-                    <div>
-
+                    <input type='button' onClick={this.onBtnSearchClick} className='btn btn-info' value='search'/>
                     </div>
                 </div>
 

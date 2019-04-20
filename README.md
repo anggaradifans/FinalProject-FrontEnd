@@ -7,8 +7,11 @@
     - sudah bisa register, dan registernya sudah dengan dengan verifikasi email (nodemailer)
     - fitur login, dengan proteksi kalo belum verifikasi gak bisa login.
     - sudah bisa add, edit, dan delete product sebagai admin.
+    - sudah bisa manage category (add, edit, delete)
     - upload foto produk (dengan multer) sudah bisa.
     - database produk sudah ditampilkan di product list dan product detail.
+    - udah bisa add to cart, tampil cart, hitung jumlah cart di navbar (dengan global state)
+    - fitur search di navbar, manage product dan product list
 
 3. Kendala 
-    - So far, belum ada kendala. Sebelumnya gak bisa add data product karena multernya ditaro di product controller, sekarang udah bisa setelah dipindahin ke routernya
+    - Masih bingung dengan flow transaksi, terutama fitur manage transaksi sebagai admin

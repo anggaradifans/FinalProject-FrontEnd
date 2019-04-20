@@ -29,6 +29,12 @@ class HeaderKu extends Component{
         searchData : ''
     }
 
+    valueHandler = () => {
+        this.setState({searchData : this.refs.searchBook.value})
+    }
+    onBtnSearch = () => {
+        this.props.getSearchData(this.state.searchData.toLowerCase())
+    }
 
     onBtnLogOut = () => {
         objCookie.remove('userData')
@@ -39,7 +45,7 @@ class HeaderKu extends Component{
     render(){ 
             if(this.props.username === ""){
                 return(
-                    <div style={{marginBottom:"75px", marginTop:"-15px"}}>
+                    <div style={{marginBottom:"70px", marginTop:"-15px"}}>
                         <Navbar className="stylish-color-dark" light expand="md" fixed="top">
                         <NavbarBrand className="ml-2" style={{fontFamily: 'Pacifico', fontSize:"30px"}}><Link to='/'>WG</Link> </NavbarBrand>
                             <NavbarToggler onClick={this.toggle} />
@@ -48,9 +54,9 @@ class HeaderKu extends Component{
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
                                     <div className="input-group mt-1" style={{width:"350px"}}>
-                                        <input type="text" ref="searchBook" onChange={() => this.setState({searchData:this.refs.searchBook.value})} className="form-control form-control-sm" placeholder="Masukkan kata kunci ... " />
-                                        <div className="input-group-append " style={{marginTop:"-5px", height:"42px"}}>
-                                        <Link to={'/product?q='+this.state.searchData}><button className="btn btn-sm blue-gradient mb-1" type="button" id="button-addon2"><i className="fas fa-search" /></button></Link>
+                                        <input type="text" ref="searchBook" onChange={() => this.setState({searchData:this.refs.searchBook.value})} className="form-control" placeholder="Masukkan kata kunci ... " />
+                                        <div className="input-group-append " style={{marginTop:"-6px", height:"42px"}}>
+                                        <Link to={'/product?q='+this.state.searchData}><button className="btn blue-gradient mb-1" type="button" id="button-addon2" style={{height:"35px"}} onClick ={this.onBtnSearch}><i className="fas fa-search" /></button></Link>
                                         </div>
                                     </div> 
                                     </NavItem>
@@ -67,7 +73,7 @@ class HeaderKu extends Component{
                 )
             } else {
                 return(
-                    <div style={{marginBottom:"75px", marginTop:"-15px"}}>
+                    <div style={{marginBottom:"74px", marginTop:"-15px"}}>
                         <Navbar className="stylish-color-dark" light expand="md" fixed="top">
                         <NavbarBrand className="ml-2" style={{fontFamily: 'Pacifico', fontSize:"30px"}}><Link to='/'>WG</Link> </NavbarBrand>
                             <NavbarToggler onClick={this.toggle} />
@@ -75,9 +81,9 @@ class HeaderKu extends Component{
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
                                     <div className="input-group mt-2" style={{width:"350px"}}>
-                                        <input type="text" ref="searchBook" onChange={() => this.props.getSearchData(this.refs.searchBook.value)} className="form-control" placeholder="Masukkan kata kunci ... " />
+                                        <input type="text" ref="searchBook" className="form-control" onChange ={this.valueHandler} placeholder="Masukkan kata kunci ... " />
                                         <div className="input-group-append mr-2" style={{marginTop:"-6px", height:"42px"}}>
-                                        <Link to={'/products?q='+this.props.search}><button className="btn blue-gradient mb-1" type="button" id="button-addon2" style={{height:"35px"}}><i className="fas fa-search" /></button></Link>
+                                        <Link to={'/search?q='+this.state.searchData}><button className="btn blue-gradient mb-1" type="button" id="button-addon2" style={{height:"35px"}} onClick ={this.onBtnSearch}><i className="fas fa-search" /></button></Link>
                                         </div>
                                     </div> 
                                     </NavItem>
