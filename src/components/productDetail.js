@@ -8,7 +8,7 @@ import CurrencyFormat from 'react-currency-format'
 import {fnHitungCart} from './../1.actions'
 
 class ProductDetail extends React.Component {
-    state ={product : {}, cart : 0}
+    state ={product : {}, cart : 0, ToCart : false}
     
     componentDidMount(){
         this.getDataApi()
@@ -30,7 +30,29 @@ class ProductDetail extends React.Component {
             this.refs.jumlah.value = 1
         }
     }
+
+    redirectToCart = () => {
+        if(this.state.ToCart == true){
+            return <Link to='/cart'/>
+        }
+    }
     
+    BuyNow = () => {
+        var qty = this.refs.jumlah.value
+        var newData = {
+            userId : this.props.id,
+            productId : this.state.product.id,
+            quantity : qty
+        }
+       Axios.post(urlApi+'/cart/addtocart', newData)
+        .then((res) => {
+           swal("Thanks for the Purchase", res.data, "success")
+           this.props.fnHitungCart(this.props.username)
+           this.setState({ToCart: true})
+           this.redirectToCart()
+        })
+        .catch((err) => console.log(err))
+    }
 
     onBtnCart = () => {
         var qty = this.refs.jumlah.value
@@ -43,6 +65,7 @@ class ProductDetail extends React.Component {
         .then((res) => {
            swal("Thanks for the Purchase", res.data, "success")
            this.props.fnHitungCart(this.props.username)
+           
         })
         .catch((err) => console.log(err))
     }
@@ -94,8 +117,8 @@ class ProductDetail extends React.Component {
 
                         {this.props.username !== "" ?
                          <div className="row mt-4">
-                            <input type='button' className='btn btn-secondary ml-3' value='Add to Wishlist' />
-                            <Link to={'/cart/showcart/' + this.props.id}><button className='btn btn-danger ml-2' onClick={() => this.onBtnCart()}>Buy Now</button></Link>
+                            <button className='btn btn-deep-orange ml-3' value='Add to Wishlist'><i class="fas fa-heart"></i></button>
+                            <button className='btn btn-danger ml-2' onClick={() => this.BuyNow()}>Buy Now</button>
                             <input type='button' className='btn btn-success  ml-2' value='Add to Cart' onClick={() => this.onBtnCart()}/>
                         </div>
                         : 

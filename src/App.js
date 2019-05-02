@@ -9,6 +9,7 @@ import PS4Videogames from './components/ps4videogames'
 import Search from './components/searchData'
 import ManageProduct from './components/manageProduct'
 import ManageCategory from './components/manageCategory'
+import ManageTransactions from './components/manageTransactions'
 import PageNotFound from  './components/pageNotFound'
 import ProductDetail from './components/productDetail'
 import ScrolltoTop from  './components/scrolltoTop'
@@ -57,6 +58,7 @@ class App extends Component {
           <Route path='/search' component={Search} exact/>
           <Route path='/manage' component={ManageProduct} exact/>
           <Route path='/category' component={ManageCategory} exact/>
+          <Route path='/transactions' component={ManageTransactions} exact/>
           <Route path='/product-detail/:id' component={ProductDetail} exact/>
           <Route path='/cart' component={Cart} exact/>
           <Route path='/history' component={History} exact/>

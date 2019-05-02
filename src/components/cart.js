@@ -121,7 +121,8 @@ class CustomPaginationActionsTable extends React.Component {
     page: 0,
     rowsPerPage: 5,
     isEdit : false,
-    editItem : {}
+    editItem : {},
+    order : ''
   };
 
   componentDidMount(){
@@ -151,21 +152,12 @@ class CustomPaginationActionsTable extends React.Component {
   }
 
   onBtnSave = () => {
-      var username = this.props.username
-      var userId = this.props.id
-      var productId = this.state.editItem.productId
-      var name = this.state.editItem.namaProduk 
-      var harga = this.state.editItem.harga
-      var diskon = this.state.editItem.discount
-      var kategori = this.state.editItem.kategori
-      var image = this.state.editItem.img
       var quantity = this.quantityEdit.inputRef.value === "" ? this.state.editItem.quantity : this.quantityEdit.inputRef.value
-  
-      var NewData = {username, userId, productId, namaProduk : name , harga : parseInt(harga) , discount : parseInt(diskon) , kategori , img : image , quantity : parseInt(quantity) }
-      Axios.put(urlApi + '/cart/' +this.state.editItem.id,NewData)
+      var NewData = {quantity}
+      Axios.put(urlApi + '/cart/editcart/' +this.state.editItem.id,NewData)
         .then((res) => {
             this.getDataApi()
-            swal("Edit Success", "Product has been edited", "success")
+            swal("Edit Success", res.data, "success")
             this.setState({isEdit : false , editItem : {}})
         })
         .catch((err) => {
@@ -195,22 +187,27 @@ class CustomPaginationActionsTable extends React.Component {
      
    }
 
-   getItem = () => {
-     var arr = []
-        for (var i = 0 ; i < this.state.rows.length; i++){
-            var data = {
-              namaProduk : this.state.rows[i].namaProduk, productId : this.state.rows[i].productId,
-              quantity: this.state.rows[i].quantity, harga : parseInt((this.state.rows[i].harga - (this.state.rows[i].harga *this.state.rows[i].discount/100))),
-              kategori : this.state.rows[i].kategori
-            }
-            arr.push(data)
+   addToTransactionDetail = () => {
+      var date = new Date()
+      for(var i = 0 ; i < this.state.rows.length;i++){
+        var newData = {
+            order_number : this.state.order,
+            iduser : this.props.id,
+            product_name : this.state.rows[i].namaProduk,
+            quantity : this.state.rows[i].quantity,
+            price : (this.state.rows[i].price - (this.state.rows[i].price *this.state.rows[i].discount/100))*this.state.rows[i].quantity,
+            tanggal_checkout : date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()
         }
-        return arr
+        Axios.post(urlApi + '/cart/addtransdetail', newData)
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err))
+      }
+    
    }
 
    deleteCart = () => {
      for(var i = 0 ; i < this.state.rows.length;i++){
-        Axios.delete(urlApi + '/cart/' + this.state.rows[i].id)
+        Axios.delete(urlApi + '/cart/deletecart/' + this.state.rows[i].id)
           .then((res) => {
             this.props.fnHitungCart(this.props.username)
             this.getDataApi()
@@ -221,18 +218,21 @@ class CustomPaginationActionsTable extends React.Component {
    checkOut = () => {
      var date = new Date()
      var newData = {
-        tanggal : date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
-        waktu : date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
+        order_number : `WG-${this.props.id}` + Date.now() ,
+        tanggal_checkout : date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
         username : this.props.username,
         userId : this.props.id,
         totalHarga : this.getTotalHarga(),
-        jumlahItem : this.state.rows.length,
-        cart : this.getItem()
+        jumlah_item : this.state.rows.length,
+        email : this.props.email,
+        status : 'Unpaid'
      }
-     Axios.post(urlApi+'/history', newData)
+     Axios.post(urlApi+'/cart/checkout', newData)
       .then((res)  => {
-        swal('Success', 'Transaksi Sukses', 'success')
+        this.setState({order : newData.order_number})
+        this.addToTransactionDetail()
         this.deleteCart()
+        swal('Success', res.data, 'success')
       })
    }
   // checkOut =() => {
@@ -429,15 +429,10 @@ class CustomPaginationActionsTable extends React.Component {
         return (
           <div className="container">
             <div className="row justify-content-center">
-            <div className='col-md-3'>
-              <h2>Cart Anda Kosong</h2>
+              <h2 className='mt-5'>Your Cart is Empty</h2>
             </div>
-            <div className="row justify-content-center">
-            <div className='col-md-3'>
-            <Link to ='/products'><input type = "button" className="btn btn-outline-success" value = "Silahkan Belanja Lagi"/></Link>
-            </div>
-            
-            </div>
+            <div className="row justify-content-center mt-5">
+            <Link to ='/products'><input type = "button" className="btn btn-success" value = "See Our Products"/></Link>
             </div>
           </div>
         )
@@ -460,7 +455,8 @@ const mapStateToProps = (state) => {
     id : state.user.id,
     username : state.user.username,
     role : state.user.role,
-    cart : state.cart.cart
+    cart : state.cart.cart,
+    email : state.user.email
   }
 }
 

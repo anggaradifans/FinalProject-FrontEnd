@@ -421,10 +421,10 @@ class CustomPaginationActionsTable extends React.Component {
                 <input type = "text" className='form-control' ref='namaEdit' placeholder={this.state.editItem.product_name}/>
                 <input type = "number" className='form-control mt-3' ref='hargaEdit' placeholder={this.state.editItem.price}/>
                 <input type = "number" className='form-control mt-3' ref='diskonEdit' placeholder={this.state.editItem.discount}/>
-                <select ref = 'kategoriEdit' className="form-control mt-3">
+                <select ref = 'kategoriEdit' className="form-control mt-3" defaultValue={this.state.editItem.idcat}>
                 {this.DropdownCategory()}
                 </select>
-                <select ref = 'subkategoriEdit' className="form-control mt-3">
+                <select ref = 'subkategoriEdit' className="form-control mt-3" defaultValue={this.state.editItem.idsub}>
                 {this.DropdownSubcategory()}
                 </select>
                 <textarea className='form-control mt-3' ref='deskripsiEdit' placeholder={this.state.editItem.deskripsi} rows="3"/>

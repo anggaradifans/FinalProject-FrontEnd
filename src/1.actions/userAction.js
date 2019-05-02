@@ -38,7 +38,8 @@ export const onLogin = (paramUsername,paramPassword) => {
                         type : 'LOGIN_SUCCESS',
                         payload : { id : res.data[0].id ,
                             username : res.data[0].username ,
-                            role : res.data[0].role}
+                            role : res.data[0].role,
+                        email : res.data[0].email}
                         
                     }, swal("Success", "Login Success, Redirecting to Homepage" , "success")
                 )

@@ -1,9 +1,10 @@
-const INITIAL_STATE = {id : 0 , username : "", error: "", loading:false, role : '', cookie : false}
+const INITIAL_STATE = {id : 0 , username : "", error: "", loading:false, role : '', email : '', cookie : false}
 
 export default (state=INITIAL_STATE,action) => {
     if(action.type === 'LOGIN_SUCCESS'){
         return {...INITIAL_STATE, id : action.payload.id, 
-            username : action.payload.username , role : action.payload.role, cookie : true}
+            username : action.payload.username , role : action.payload.role, 
+            email : action.payload.email,cookie : true}
     }
      else if (action.type === 'REGISTER_SUCCESS'){
         return {...INITIAL_STATE, cookie : true}

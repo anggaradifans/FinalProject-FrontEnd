@@ -54,7 +54,7 @@ class HeaderKu extends Component{
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
                                     <div className="input-group mt-1" style={{width:"350px"}}>
-                                        <input type="text" ref="searchBook" onChange={() => this.setState({searchData:this.refs.searchBook.value})} className="form-control" placeholder="Masukkan kata kunci ... " />
+                                        <input type="text" ref="searchBook" onChange={() => this.setState({searchData:this.refs.searchBook.value})} className="form-control" placeholder="Enter keywords..." />
                                         <div className="input-group-append " style={{marginTop:"-6px", height:"42px"}}>
                                         <Link to={'/product?q='+this.state.searchData}><button className="btn blue-gradient mb-1" type="button" id="button-addon2" style={{height:"35px"}} onClick ={this.onBtnSearch}><i className="fas fa-search" /></button></Link>
                                         </div>
@@ -81,7 +81,7 @@ class HeaderKu extends Component{
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
                                     <div className="input-group mt-2" style={{width:"350px"}}>
-                                        <input type="text" ref="searchBook" className="form-control" onChange ={this.valueHandler} placeholder="Masukkan kata kunci ... " />
+                                        <input type="text" ref="searchBook" className="form-control" onChange ={this.valueHandler} placeholder="Enter keywords... " />
                                         <div className="input-group-append mr-2" style={{marginTop:"-6px", height:"42px"}}>
                                         <Link to={'/search?q='+this.state.searchData}><button className="btn blue-gradient mb-1" type="button" id="button-addon2" style={{height:"35px"}} onClick ={this.onBtnSearch}><i className="fas fa-search" /></button></Link>
                                         </div>
@@ -101,6 +101,12 @@ class HeaderKu extends Component{
                                         {this.props.role === 'admin' ?
                                         <Link to="/category"><DropdownItem>
                                         Manage Category
+                                        </DropdownItem></Link>
+                                        : null
+                                        }
+                                        {this.props.role === 'admin' ?
+                                        <Link to="/transactions"><DropdownItem>
+                                        Manage Transaction
                                         </DropdownItem></Link>
                                         : null
                                         }

@@ -148,12 +148,12 @@ class ProductList extends React.Component{
         })
         return (
         <div className="container">
-              <h1>Our Product</h1>
-                <div className='row mb-3'>
+              <h1 className='mt-5' style={{textAlign:'center'}}>Our Product</h1>
+                <div className='row justify-content-center mb-3'>
                     <div className='col-md-3'> 
                     <input type='text' ref='inputsearch' placeholder='Search Product' className='form-control' /> 
                     </div>
-                    <div className='col-md-3'>
+                    <div className='col-md-2'>
                     <select ref='dropdown' onChange={() => { 
                         this.pushUrl()
                         this.setState({filterCategory : this.refs.dropdown.value, dataPerpage : 6})}} className='form-control'> 
@@ -167,7 +167,7 @@ class ProductList extends React.Component{
                         }
                     </select>
                     </div>
-                    <div className='col-md-3'>
+                    <div className='col-md-2'>
                     <select ref='subcat' onChange={() => {
                         this.pushUrl()
                         this.setState({filterSub : this.refs.subcat.value, dataPerpage : 6})}} className='form-control'> 
