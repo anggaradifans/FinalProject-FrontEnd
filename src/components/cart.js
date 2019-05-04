@@ -16,11 +16,12 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import Axios from 'axios';
 import swal from 'sweetalert'
+import Moment from 'moment'
 import {Button , Icon , Input} from 'semantic-ui-react'
 import { urlApi } from '../support/urlApi';
 import {connect } from 'react-redux'
 import {fnHitungCart, resetCount} from './../1.actions'
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 import PageNotFound from './pageNotFound'
 
 const actionsStyles = theme => ({
@@ -122,7 +123,9 @@ class CustomPaginationActionsTable extends React.Component {
     rowsPerPage: 5,
     isEdit : false,
     editItem : {},
-    order : ''
+    order : '',
+    checkOutDate : '',
+    checkOut : false
   };
 
   componentDidMount(){
@@ -188,7 +191,6 @@ class CustomPaginationActionsTable extends React.Component {
    }
 
    addToTransactionDetail = () => {
-      var date = new Date()
       for(var i = 0 ; i < this.state.rows.length;i++){
         var newData = {
             order_number : this.state.order,
@@ -196,7 +198,7 @@ class CustomPaginationActionsTable extends React.Component {
             product_name : this.state.rows[i].namaProduk,
             quantity : this.state.rows[i].quantity,
             price : (this.state.rows[i].price - (this.state.rows[i].price *this.state.rows[i].discount/100))*this.state.rows[i].quantity,
-            tanggal_checkout : date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()
+            tanggal_checkout : this.state.checkOutDate
         }
         Axios.post(urlApi + '/cart/addtransdetail', newData)
           .then((res) => console.log(res))
@@ -216,10 +218,9 @@ class CustomPaginationActionsTable extends React.Component {
    }
 
    checkOut = () => {
-     var date = new Date()
      var newData = {
         order_number : `WG-${this.props.id}` + Date.now() ,
-        tanggal_checkout : date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
+        tanggal_checkout : Moment().format('DD-MM-YYYY, h:mm:ss'),
         username : this.props.username,
         userId : this.props.id,
         totalHarga : this.getTotalHarga(),
@@ -229,10 +230,11 @@ class CustomPaginationActionsTable extends React.Component {
      }
      Axios.post(urlApi+'/cart/checkout', newData)
       .then((res)  => {
-        this.setState({order : newData.order_number})
+        this.setState({order : newData.order_number, checkOutDate : newData.tanggal_checkout})
         this.addToTransactionDetail()
         this.deleteCart()
-        swal('Success', res.data, 'success')
+        swal('Success', 'Invoice Sent to Email, Please Upload Your Receipt', 'success')
+        this.setState({checkOut:true})
       })
    }
   // checkOut =() => {
@@ -317,6 +319,10 @@ class CustomPaginationActionsTable extends React.Component {
   }
 
   render() {
+
+    if(this.state.checkOut == true){
+      return <Redirect to= {`/payment/${this.state.order}`} />
+    }
     const { classes } = this.props;
     const { rows, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);

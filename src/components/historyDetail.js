@@ -13,10 +13,9 @@ class HistoryDetail extends React.Component{
     }
     getDataApi = () => {
         var idUrl = this.props.match.params.id
-        Axios.get(urlApi + '/history?userId='+this.props.id+'&id='+idUrl)
+        Axios.get(urlApi + '/trans/transdetail/'+idUrl)
             .then((res) => {
-                console.log(res)
-                this.setState({rows : res.data[0].cart})
+                this.setState({rows : res.data})
             })
             .catch((err) => console.log(err))
     }
@@ -25,10 +24,10 @@ class HistoryDetail extends React.Component{
         var detail = this.state.rows.map((val, index) => {
             return (
                 <tr>
-                    <th scope="row">{index+1}</th>
-                    <td>{val.namaProduk}</td>
+                    <td>{index+1}</td>
+                    <td>{val.product_name}</td>
                     <td>{val.quantity}</td>
-                    <td>{val.harga}</td>
+                    <td>Rp. {val.price},00</td>
                 </tr>
             )
         })
@@ -39,20 +38,20 @@ class HistoryDetail extends React.Component{
     render() {
         return (
             <div className="container">
-            <table className="table table-hover">
+            <table className=" table table-responsive table-hover">
                     <thead>
                     <tr>
-                        <th scope="col">No</th>
-                        <th scope="col">Nama Produk</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Harga</th>
+                        <td>No</td>
+                        <td>Nama Produk</td>
+                        <td>Quantity</td>
+                        <td>Harga</td>
                     </tr>
                     </thead>
                     <tbody>
                         {this.renderJsx()}
-                        <Link to={'/history'}><input type='button' className='btn btn-outline-success' value='Back to Previous Menu'/></Link>
                     </tbody>
                 </table>
+                <Link to={'/history'}><input type='button' className='btn btn-outline-success' value='Back to Previous Menu'/></Link>
         </div>
         )
     }

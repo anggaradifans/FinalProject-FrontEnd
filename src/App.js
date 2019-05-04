@@ -14,6 +14,7 @@ import PageNotFound from  './components/pageNotFound'
 import ProductDetail from './components/productDetail'
 import ScrolltoTop from  './components/scrolltoTop'
 import Cart from './components/cart'
+import Payment from './components/payment'
 import History from './components/history'
 import Footer from './components/footer'
 import { Route, withRouter, Switch } from 'react-router-dom'
@@ -61,6 +62,7 @@ class App extends Component {
           <Route path='/transactions' component={ManageTransactions} exact/>
           <Route path='/product-detail/:id' component={ProductDetail} exact/>
           <Route path='/cart' component={Cart} exact/>
+          <Route path='/payment/:id' component={Payment} exact/>          
           <Route path='/history' component={History} exact/>
           <Route path='/history-detail/:id' component={historyDetail} exact/>
           <Route path='*' component={PageNotFound} exact/>

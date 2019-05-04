@@ -13,7 +13,7 @@ class History extends React.Component{
         this.getDataApi()
     }
     getDataApi = () => {
-        Axios.get(urlApi + '/history?userId='+this.props.id)
+        Axios.get(urlApi + '/trans/history/'+this.props.id)
             .then((res) => {
                 console.log(res)
                 this.setState({rows : res.data})
@@ -26,12 +26,11 @@ class History extends React.Component{
             return (
                     <tr>
                         <th scope="row">{index+1}</th>
-                        <td>{val.tanggal}</td>
-                        <td>{val.waktu}</td>
-                        <td>{val.username}</td>
-                        <td>{val.jumlahItem}</td>
-                        <td>{val.totalHarga}</td>
-                        <Link to={'/history-detail/'+val.id}><input type='button' className='btn btn-outline-success' value='Detail'/></Link>
+                        <td>{val.tanggal_checkout}</td>
+                        <td>{val.tanggal_bayar}</td>
+                        <td>{val.jumlah_item}</td>
+                        <td>{val.totalharga}</td>
+                        <Link to={'/history-detail/'+val.order_number}><input type='button' className='btn btn-outline-success' value='Detail'/></Link>
                     </tr>
             )
         })
@@ -43,13 +42,13 @@ class History extends React.Component{
         if(this.props.username !== ''){
             return (
                 <div className="container">
+                <h2 style={{marginTop:'5px'}}>Transactions History for {this.props.username}</h2>
                 <table className="table table-hover">
                         <thead>
                         <tr>
                             <th scope="col">No</th>
-                            <th scope="col">Tanggal</th>
-                            <th scope="col">Waktu</th>
-                            <th scope="col">Username</th>
+                            <th scope="col">Tanggal Checkout</th>
+                            <th scope="col">Tanggal Pembayaran</th>
                             <th scope="col">Jumlah Item</th>
                             <th scope="col">Total Harga</th>
                             <th scope="col">Detail Transaksi</th>
