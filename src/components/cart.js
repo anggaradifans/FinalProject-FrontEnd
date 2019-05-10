@@ -237,53 +237,6 @@ class CustomPaginationActionsTable extends React.Component {
         this.setState({checkOut:true})
       })
    }
-  // checkOut =() => {
-  //   Axios.get(urlApi+'/cart?userId='+this.props.id)
-  //     .then((res)=> {
-  //       if(res.data.length > 0){
-  //         var ArrCart= []
-  //         var totalHarga = 0
-  //         var today = new Date();
-  //         var dd = String(today.getDate()).padStart(2, '0');
-  //         var mm = String(today.getMonth() + 1).padStart(2, '0');
-  //         var jam = String(today.getHours()).padStart(2, '0');
-  //         var menit = String(today.getMinutes()).padStart(2, '0');
-  //         var detik = String(today.getSeconds()).padStart(2, '0');
-  //         var yyyy = today.getFullYear();
-  //         today = mm + '/' + dd + '/' + yyyy;
-  //         var waktu = jam + ':' + menit + ':' + detik
-  //         var jumlahItem = res.data.length
-  //         var username = this.props.username
-  //         var userId = this.props.id
-  //         var newData = {tanggal : today, waktu ,username, userId, jumlahItem}
-  //           for (var i = 0 ; i< this.state.rows.length; i++){
-  //             var quantity = res.data[i].quantity
-  //             var productId = res.data[i].productId
-  //             var namaProduk = res.data[i].namaProduk
-  //             var harga = res.data[i].harga - (res.data[i].harga*(res.data[i].discount/100))
-  //             var discount = res.data[i].discount
-  //             var kategori = res.data[i].kategori
-  //             totalHarga += (res.data[i].harga - (res.data[i].harga*(res.data[i].discount/100)))*quantity
-  //             var DataCart = {namaProduk, productId, quantity,harga,discount,kategori}
-  //             ArrCart.push(DataCart)
-  //             Axios.delete(urlApi+"/cart/"+this.state.rows[i].id)
-  //               .then((res) => {
-  //                 console.log(res)
-  //                 this.props.resetCount()
-  //                 this.getDataApi()
-  //               })
-  //               .catch((err) => console.log(err))
-  //           } Axios.post(urlApi + '/history',{...newData,totalHarga,cart : ArrCart})
-  //               .then((res) => {
-  //               swal('Success', 'Transaksi Sukses', 'success')
-  //               })
-  //               .catch((err) => console.log(err))
-  //       } else {
-  //         swal("Cart Anda Kosong", "Coba belanja dulu", "error")
-  //       }
-  //     })
-  //     .catch((err)=> console.log(err))
-  // }
 
   renderJsx = () => {
     var jsx = this.state.rows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((val, index) => {
@@ -331,7 +284,8 @@ class CustomPaginationActionsTable extends React.Component {
     if(this.props.username !== ''){
       if(this.state.rows.length > 0){
         return (
-          <div className = 'container'>
+          <div className = 'container' style={{marginBottom:'90px'}}>
+            <h2 style={{padding:'10px'}}>Shopping Cart List</h2>
             <Paper className={classes.root}>
               <div className={classes.tableWrapper}>
                 <Table className={classes.table}>

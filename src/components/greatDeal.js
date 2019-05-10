@@ -38,12 +38,14 @@ class GreatDeal extends React.Component{
 
     render(){
         const settings = {
-            className: "center",
-            centerMode: true,
+            dots: true,
             infinite: true,
-            centerPadding: "60px",
             slidesToShow: 3,
-            speed: 500
+            slidesToScroll: 1,
+            autoplay: true,
+            speed: 2000,
+            autoplaySpeed: 2000,
+            cssEase: "linear"
           };
         return (
             <div style={{width:"100%"}}>

@@ -5,6 +5,7 @@ import Login from './components/login'
 import Register from './components/register'
 import Verify from './components/verify'
 import Product from './components/productList'
+import Wishlist from './components/wishlist'
 import PS4Videogames from './components/ps4videogames'
 import Search from './components/searchData'
 import ManageProduct from './components/manageProduct'
@@ -16,13 +17,13 @@ import ScrolltoTop from  './components/scrolltoTop'
 import Cart from './components/cart'
 import Payment from './components/payment'
 import History from './components/history'
+import historyDetail from './components/historyDetail';
 import Footer from './components/footer'
 import { Route, withRouter, Switch } from 'react-router-dom'
 import {connect} from 'react-redux'
 import cookie from 'universal-cookie'
-import {keepLogin, cookieChecked, fnHitungCart} from './1.actions'
+import {keepLogin, cookieChecked, fnHitungCart, hitungTransactions} from './1.actions'
 import './App.css';
-import historyDetail from './components/historyDetail';
 
 
 
@@ -36,7 +37,8 @@ class App extends Component {
     var terserah = objCookie.get('userData')
     if(terserah !== undefined){
       this.props.keepLogin(terserah)
-      this.props.fnHitungCart(terserah)   
+      this.props.fnHitungCart(terserah)
+      this.props.hitungTransactions()   
     } else {
       this.props.cookieChecked()
     }
@@ -55,6 +57,7 @@ class App extends Component {
           <Route path='/register' component={Register} exact/>
           <Route path='/verify' component={Verify} exact/>
           <Route path='/products' component={Product} exact/>
+          <Route path='/wishlist' component={Wishlist} exact/>
           <Route path='/ps4videogames' component={PS4Videogames} exact/>
           <Route path='/search' component={Search} exact/>
           <Route path='/manage' component={ManageProduct} exact/>
@@ -83,8 +86,9 @@ const mapStatetoProps = (state) => {
       id : state.user.id,
       username : state.user.username,
       cookie : state.user.cookie,
-      cart : state.cart.cart
+      cart : state.cart.cart,
+      transactions : state.trans.transactions
     }
 }
 
-export default withRouter(connect(mapStatetoProps, {keepLogin, cookieChecked, fnHitungCart})(App));
+export default withRouter(connect(mapStatetoProps, {keepLogin, cookieChecked, fnHitungCart, hitungTransactions})(App));

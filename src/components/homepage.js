@@ -16,7 +16,7 @@ class Homepage extends React.Component{
           </div>
           <Fade>
           <div className="ml-1 mt-5 mb-5"> 
-            <h1 className='blue-gradient text-white rounded-pill shadow-lg' style={{textAlign:"center"}}> Welcome to Walaoeh Games </h1>
+            <h1 className='mdb-color darken-3 text-white rounded-pill shadow-lg' style={{textAlign:"center"}}> Welcome to Walaoeh Games </h1>
             <h2 style={{textAlign:"center", fontWeight:"700"}}>Great Deals</h2>            
             <hr/>
             <GreatDeal/>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link , Redirect } from 'react-router-dom'
 import {connect} from 'react-redux'
-import {onLogin, fnHitungCart} from './../1.actions'
+import {onLogin, fnHitungCart, hitungTransactions} from './../1.actions'
 import Loader from 'react-loader-spinner'
 import cookie from 'universal-cookie'
 import './../support/css/style.css'
@@ -15,6 +15,7 @@ class Login extends React.Component{
     componentWillReceiveProps(newProps){
         if(newProps.username !== ''){
             this.props.fnHitungCart(newProps.username)
+            this.props.hitungTransactions()
             Cookie.set('userData',newProps.username,{path :'/'})
         }
         
@@ -101,4 +102,4 @@ const mapsStatetoProps = (state) => {
   }
 }
 
-export default connect(mapsStatetoProps,{onLogin, fnHitungCart})(Login)
+export default connect(mapsStatetoProps,{onLogin, fnHitungCart, hitungTransactions})(Login)

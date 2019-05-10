@@ -2,16 +2,17 @@ import React from  'react'
 import Axios from 'axios'
 import {urlApi} from './../support/urlApi'
 import {connect} from 'react-redux'
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 import swal from 'sweetalert'
 import CurrencyFormat from 'react-currency-format'
 import {fnHitungCart} from './../1.actions'
 
 class ProductDetail extends React.Component {
-    state ={product : {}, cart : 0, ToCart : false}
+    state ={product : {}, cart : 0, ToCart : false, wishlist : false}
     
     componentDidMount(){
         this.getDataApi()
+        this.getDataWishlist()
     }
     
     getDataApi = () => {
@@ -25,16 +26,41 @@ class ProductDetail extends React.Component {
         })
     }
 
+    getDataWishlist = () => {
+        var idUrl = this.props.match.params.id
+        Axios.get(urlApi+`/product/wl?iduser=${this.props.id}&idproduk=${idUrl}`)
+            .then((res) => {
+                console.log(res)
+                if(res.data[0]){
+                    this.setState({wishlist: true})
+                }
+            })
+            .catch((err) => console.log(err))
+    }
+
     proteksiJumlah = () => {
         if(this.refs.jumlah.value < 1){
             this.refs.jumlah.value = 1
         }
     }
 
-    redirectToCart = () => {
-        if(this.state.ToCart == true){
-            return <Link to='/cart'/>
+    AddToWishlist = () => {
+        var newData = {
+            iduser : this.props.id,
+            idproduk : this.state.product.id
         }
+        Axios.post(urlApi+'/product/addtowl', newData)
+            .then((res) => {
+                swal('Success', res.data, 'success')
+                if(this.state.wishlist === false){
+                    this.setState({wishlist : true})
+                } else {
+                    this.setState({wishlist : false})
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
     
     BuyNow = () => {
@@ -49,7 +75,7 @@ class ProductDetail extends React.Component {
            swal("Thanks for the Purchase", res.data, "success")
            this.props.fnHitungCart(this.props.username)
            this.setState({ToCart: true})
-           this.redirectToCart()
+           
         })
         .catch((err) => console.log(err))
     }
@@ -73,6 +99,9 @@ class ProductDetail extends React.Component {
     
     render(){
         var {product_name, image, discount, deskripsi, price} = this.state.product
+        if(this.state.ToCart == true){
+            return <Redirect to='/cart'/>
+        }
         return (
             <div className ='container'>
                 <div className="row justify-content-center">
@@ -98,26 +127,30 @@ class ProductDetail extends React.Component {
                         <div className="row">
                             <div className="col-md-2">
                                 <div style={{marginTop:"10px" ,color:"#606060" , 
-                                            fontWeight:"700", fontSize:"14px"}}>Jumlah</div>
+                                            fontWeight:"700", fontSize:"14px"}}>Quantity</div>
                                 <input type='number' ref ='jumlah' min={1} defaultValue={1} className='form-control'  onChange={this.proteksiJumlah} style={{width : '60px' , 
                                             marginTop:'10px'}}/>
                             </div>
-                            <div className="col-md-6">
+                            {/* <div className="col-md-6">
                                 <div style={{marginTop:"10px" ,color:"#606060" , 
                                             fontWeight:"700", fontSize:"14px"}}>Catatan untuk Penjual (Opsional)</div>
                                 <input type='text' className='form-control' placeholder="Contoh: Warna putih, Ukuran XL, Edisi ke-2" 
                                         style={{marginTop:'13px'}}/>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="row mt-4">
                             <div className="col-md-8">
-                                <p style={{color:"#606060", fontStyle:"italic"}}>{deskripsi}</p> 
+                                <p style={{color:"#606060", fontStyle:"italic", fontFamily:"Lato"}}>{deskripsi}</p> 
                             </div>
                         </div>
 
                         {this.props.username !== "" ?
                          <div className="row mt-4">
-                            <button className='btn btn-deep-orange ml-3' value='Add to Wishlist'><i class="fas fa-heart"></i></button>
+                            {this.state.wishlist ? 
+                                <button className='btn btn-light ml-3' value='Add to Wishlist' onClick={() => this.AddToWishlist()}><i class="fas fa-heart" style={{color:'red'}}></i></button>
+                             : <button className='btn btn-deep-orange ml-3' value='Add to Wishlist' onClick={() => this.AddToWishlist()}><i class="fas fa-heart"></i></button>
+                            }
+                            
                             <button className='btn btn-danger ml-2' onClick={() => this.BuyNow()}>Buy Now</button>
                             <input type='button' className='btn btn-success  ml-2' value='Add to Cart' onClick={() => this.onBtnCart()}/>
                         </div>

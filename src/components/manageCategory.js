@@ -166,7 +166,7 @@ class ManageCategory extends React.Component{
     
     render(){
         return (
-                <div className="container">
+                <div className="container" style={{fontFamily:'Roboto'}}>
                     <div className="row justify-content-center">
                         <div className="col-md-4">
                             <table className="table table-hover">

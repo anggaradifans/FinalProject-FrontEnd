@@ -37,6 +37,22 @@ class ManageTrasactions extends React.Component{
             })
     }
 
+    rejectTransaction = (param) => {
+        var newData = {
+            status : 'Rejected',
+            no : param.order_number,
+            username : param.username,
+            email : param.email
+        }
+        
+        Axios.put(urlApi+ '/trans/reject/'+param.id, newData)
+            .then((res) => {
+                swal('Success', res.data, 'success')
+                this.getDataTransactions()
+            })
+            .catch((err) => console.log(err))
+    }
+
     renderJsx = () => {
         var jsx = this.state.data.map((val, index) => {
             return (
@@ -51,7 +67,7 @@ class ManageTrasactions extends React.Component{
                         </td>
                         <td>
                             <input type='button' className='btn btn-success' value='Approve' onClick={() => this.approveTransaction(val.id)} />
-                            <input type='button' className='btn btn-primary' value='Reject' style={{width:'115px'}}/>  
+                            <input type='button' className='btn btn-primary' value='Reject' onClick={() => this.rejectTransaction(val)} style={{width:'115px'}}/>  
                         </td>
                         
                     </tr>

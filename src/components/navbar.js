@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import {connect} from 'react-redux'
 import {resetUser, resetCount, getSearchData} from './../1.actions'
 import cookie from 'universal-cookie'
+import './../support/css/style.css'
 
 const objCookie = new cookie()
 class HeaderKu extends Component{
@@ -46,7 +47,7 @@ class HeaderKu extends Component{
             if(this.props.username === ""){
                 return(
                     <div style={{marginBottom:"70px", marginTop:"-15px"}}>
-                        <Navbar className="stylish-color-dark" light expand="md" fixed="top">
+                        <Navbar className="mdb-color darken-3" light expand="md" fixed="top">
                         <NavbarBrand className="ml-2" style={{fontFamily: 'Pacifico', fontSize:"30px"}}><Link to='/'>WG</Link> </NavbarBrand>
                             <NavbarToggler onClick={this.toggle} />
                             <NavbarToggler onClick={this.toggle} />
@@ -54,7 +55,7 @@ class HeaderKu extends Component{
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
                                     <div className="input-group mt-1" style={{width:"350px"}}>
-                                        <input type="text" ref="searchBook" onChange={() => this.setState({searchData:this.refs.searchBook.value})} className="form-control" placeholder="Enter keywords..." />
+                                        <input type="text" ref="searchBook" onChange={() => this.setState({searchData:this.refs.searchBook.value})} className="form-control" placeholder="Enter keywords..." style={{fontFamily:'Roboto'}}/>
                                         <div className="input-group-append " style={{marginTop:"-6px", height:"42px"}}>
                                         <Link to={'/product?q='+this.state.searchData}><button className="btn blue-gradient mb-1" type="button" id="button-addon2" style={{height:"35px"}} onClick ={this.onBtnSearch}><i className="fas fa-search" /></button></Link>
                                         </div>
@@ -73,22 +74,25 @@ class HeaderKu extends Component{
                 )
             } else {
                 return(
-                    <div style={{marginBottom:"74px", marginTop:"-15px"}}>
-                        <Navbar className="stylish-color-dark" light expand="md" fixed="top">
+                    <div style={{marginBottom:"70px", marginTop:"-15px"}}>
+                        <Navbar className="mdb-color darken-3" light expand="md" fixed="top">
                         <NavbarBrand className="ml-2" style={{fontFamily: 'Pacifico', fontSize:"30px"}}><Link to='/'>WG</Link> </NavbarBrand>
                             <NavbarToggler onClick={this.toggle} />
                             <Collapse isOpen={this.state.isOpen} navbar>
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
                                     <div className="input-group mt-2" style={{width:"350px"}}>
-                                        <input type="text" ref="searchBook" className="form-control" onChange ={this.valueHandler} placeholder="Enter keywords... " />
+                                        <input type="text" ref="searchBook" className="form-control" onChange ={this.valueHandler} placeholder="Enter keywords... " style={{fontFamily:'Roboto'}} />
                                         <div className="input-group-append mr-2" style={{marginTop:"-6px", height:"42px"}}>
                                         <Link to={'/search?q='+this.state.searchData}><button className="btn blue-gradient mb-1" type="button" id="button-addon2" style={{height:"35px"}} onClick ={this.onBtnSearch}><i className="fas fa-search" /></button></Link>
                                         </div>
                                     </div> 
                                     </NavItem>
-                                    <UncontrolledDropdown  nav inNavbar>
-                                        <DropdownToggle style={{color:"white",  marginTop:"5px"}} nav caret>
+                                    <NavItem style={{marginLeft:"10px"}}>
+                                        <NavLink style={{color:"white", marginTop:"5px", fontFamily:'Roboto'}}> Hello, {this.props.username} </NavLink>
+                                    </NavItem>
+                                    <UncontrolledDropdown  nav inNavba style={{marginRight:"10px"}}>
+                                        <DropdownToggle style={{color:"white",  marginTop:"5px", fontFamily:'Roboto'}} nav caret>
                                         Menu
                                         </DropdownToggle>
                                         <DropdownMenu right>
@@ -104,20 +108,14 @@ class HeaderKu extends Component{
                                         </DropdownItem></Link>
                                         : null
                                         }
-                                        {this.props.role === 'admin' ?
-                                        <Link to="/transactions"><DropdownItem>
-                                        Manage Transaction
-                                        </DropdownItem></Link>
-                                        : null
-                                        }
-                                        <Link to='/history'><DropdownItem>
-                                            Transaction History
-                                        </DropdownItem>
-                                        </Link>
                                         <DropdownItem>
                                             Edit Profile
                                         </DropdownItem>
                                         <DropdownItem divider />
+                                        <Link to='/history'><DropdownItem>
+                                            Transaction History
+                                        </DropdownItem>
+                                        </Link>
                                         <Link to='/'><DropdownItem onClick={this.onBtnLogOut}>
                                             Logout
                                         </DropdownItem>
@@ -125,12 +123,17 @@ class HeaderKu extends Component{
                                         </DropdownMenu>
                                     </UncontrolledDropdown>
                                     <NavItem>
-                                        <NavLink style={{color:"white", marginTop:"5px"}}> Hello, {this.props.username} </NavLink>
+                                        <Link to="/cart"><NavLink className="notification" style={{color:"white"}}><i class="fas fa-shopping-cart"></i> {this.props.cart ? this.props.cart : null}</NavLink></Link>
                                     </NavItem>
                                     <NavItem>
-                                        <Link to="/cart"><NavLink className="btn btn-default border-primary btn-sm" style={{fontSize:"14px"}}><i class="fas fa-shopping-cart"></i> {this.props.cart ? this.props.cart : null} Cart(s)</NavLink></Link>
+                                    <Link to='/wishlist'><NavLink className="wishlist" style={{color:"white"}}><i class="fas fa-heart"></i></NavLink></Link>
                                     </NavItem>
-                                   
+                                    {this.props.role === 'admin' ? 
+                                    <NavItem>
+                                    <Link to='/transactions'><NavLink className="transactions" style={{color:"white"}}><i class="fas fa-bell"></i> {this.props.transactions ? this.props.transactions : null} </NavLink></Link>
+                                    </NavItem> : null
+                                    }
+                                    
                                 </Nav>
                             </Collapse>
                         </Navbar>
@@ -145,7 +148,8 @@ const mapStateToProps = (state) => {
         username : state.user.username,
         role : state.user.role,
         cart : state.cart.cart,
-        search : state.search.searchData
+        search : state.search.searchData,
+        transactions : state.trans.transactions
     
     }
 }
