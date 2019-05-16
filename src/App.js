@@ -16,6 +16,7 @@ import ProductDetail from './components/productDetail'
 import ScrolltoTop from  './components/scrolltoTop'
 import Cart from './components/cart'
 import Payment from './components/payment'
+import PaymentList from './components/paymentList'
 import History from './components/history'
 import historyDetail from './components/historyDetail';
 import Footer from './components/footer'
@@ -65,7 +66,8 @@ class App extends Component {
           <Route path='/transactions' component={ManageTransactions} exact/>
           <Route path='/product-detail/:id' component={ProductDetail} exact/>
           <Route path='/cart' component={Cart} exact/>
-          <Route path='/payment/:id' component={Payment} exact/>          
+          <Route path='/payment/:id' component={Payment} exact/>
+          <Route path='/paymentlist' component={PaymentList} exact/>          
           <Route path='/history' component={History} exact/>
           <Route path='/history-detail/:id' component={historyDetail} exact/>
           <Route path='*' component={PageNotFound} exact/>

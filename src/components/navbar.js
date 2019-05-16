@@ -48,7 +48,7 @@ class HeaderKu extends Component{
                 return(
                     <div style={{marginBottom:"70px", marginTop:"-15px"}}>
                         <Navbar className="mdb-color darken-3" light expand="md" fixed="top">
-                        <NavbarBrand className="ml-2" style={{fontFamily: 'Pacifico', fontSize:"30px"}}><Link to='/'>WG</Link> </NavbarBrand>
+                        <NavbarBrand className="ml-2" style={{fontFamily: 'Viga', fontSize:'30px'}}><Link to='/'><img src="http://localhost:2000/upload/LogoNavbar.png" alt="brand" width="40px" />GamersLab</Link> </NavbarBrand>
                             <NavbarToggler onClick={this.toggle} />
                             <NavbarToggler onClick={this.toggle} />
                             <Collapse isOpen={this.state.isOpen} navbar>
@@ -57,7 +57,7 @@ class HeaderKu extends Component{
                                     <div className="input-group mt-1" style={{width:"350px"}}>
                                         <input type="text" ref="searchBook" onChange={() => this.setState({searchData:this.refs.searchBook.value})} className="form-control" placeholder="Enter keywords..." style={{fontFamily:'Roboto'}}/>
                                         <div className="input-group-append " style={{marginTop:"-6px", height:"42px"}}>
-                                        <Link to={'/product?q='+this.state.searchData}><button className="btn blue-gradient mb-1" type="button" id="button-addon2" style={{height:"35px"}} onClick ={this.onBtnSearch}><i className="fas fa-search" /></button></Link>
+                                        <Link to={'/search?q='+this.state.searchData}><button className="btn blue-gradient mb-1" type="button" id="button-addon2" style={{height:"35px"}} onClick ={this.onBtnSearch}><i className="fas fa-search" /></button></Link>
                                         </div>
                                     </div> 
                                     </NavItem>
@@ -76,7 +76,7 @@ class HeaderKu extends Component{
                 return(
                     <div style={{marginBottom:"70px", marginTop:"-15px"}}>
                         <Navbar className="mdb-color darken-3" light expand="md" fixed="top">
-                        <NavbarBrand className="ml-2" style={{fontFamily: 'Pacifico', fontSize:"30px"}}><Link to='/'>WG</Link> </NavbarBrand>
+                        <NavbarBrand className="ml-2" style={{fontFamily: 'Viga', fontSize:'30px'}}><Link to='/'><img src="http://localhost:2000/upload/LogoNavbar.png" alt="brand" width="40px" />GamersLab</Link> </NavbarBrand>
                             <NavbarToggler onClick={this.toggle} />
                             <Collapse isOpen={this.state.isOpen} navbar>
                                 <Nav className="ml-auto" navbar>
@@ -131,7 +131,9 @@ class HeaderKu extends Component{
                                     {this.props.role === 'admin' ? 
                                     <NavItem>
                                     <Link to='/transactions'><NavLink className="transactions" style={{color:"white"}}><i class="fas fa-bell"></i> {this.props.transactions ? this.props.transactions : null} </NavLink></Link>
-                                    </NavItem> : null
+                                    </NavItem> :  <NavItem>
+                                    <Link to='/paymentlist'><NavLink className="transactions" style={{color:"white"}}><i class="fas fa-bell"></i></NavLink></Link>
+                                    </NavItem>
                                     }
                                     
                                 </Nav>

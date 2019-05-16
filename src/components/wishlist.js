@@ -68,7 +68,7 @@ class Wishlist extends React.Component{
     render(){
         return (
             <div className='container'>
-                <h1> Your WishList</h1>
+                <h1 style={{padding:'20px'}}> Your WishList</h1>
                 <div className='row'>
                     {this.renderJsx()}
                 </div>

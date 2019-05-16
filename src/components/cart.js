@@ -190,6 +190,20 @@ class CustomPaginationActionsTable extends React.Component {
      
    }
 
+   getDataCart = () => {
+    var cart = []
+    for(var i = 0 ; i < this.state.rows.length;i++){
+      var newData = {
+          product_name : this.state.rows[i].namaProduk,
+          quantity : this.state.rows[i].quantity,
+          price : (this.state.rows[i].price - (this.state.rows[i].price *this.state.rows[i].discount/100))*this.state.rows[i].quantity,
+          tanggal_checkout : this.state.checkOutDate
+      }
+      cart.push(newData)
+    }
+    return cart
+   }
+
    addToTransactionDetail = () => {
       for(var i = 0 ; i < this.state.rows.length;i++){
         var newData = {
@@ -218,19 +232,23 @@ class CustomPaginationActionsTable extends React.Component {
    }
 
    checkOut = () => {
-     var newData = {
-        order_number : `WG-${this.props.id}` + Date.now() ,
-        tanggal_checkout : Moment().format('DD-MM-YYYY, h:mm:ss'),
+     var order_number = `GL-${this.props.id}` + Date.now()
+    var tanggal_checkout = Moment().format('DD-MM-YYYY, h:mm:ss')
+    this.setState({order : order_number, checkOutDate : tanggal_checkout})
+    var cart = this.getDataCart() 
+    var newData = {
+        order_number,
+        tanggal_checkout,
         username : this.props.username,
         userId : this.props.id,
         totalHarga : this.getTotalHarga(),
         jumlah_item : this.state.rows.length,
         email : this.props.email,
+        cart,
         status : 'Unpaid'
      }
      Axios.post(urlApi+'/cart/checkout', newData)
       .then((res)  => {
-        this.setState({order : newData.order_number, checkOutDate : newData.tanggal_checkout})
         this.addToTransactionDetail()
         this.deleteCart()
         swal('Success', 'Invoice Sent to Email, Please Upload Your Receipt', 'success')
@@ -292,12 +310,13 @@ class CustomPaginationActionsTable extends React.Component {
                 <TableHead>
                     <TableRow>
                         <TableCell style={{fontSize:'20px', fontWeight:'600'}}>NO</TableCell>
-                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>PRODUK</TableCell>
-                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>HARGA</TableCell>
+                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>PRODUCT</TableCell>
+                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>PRICE</TableCell>
                         <TableCell style={{fontSize:'20px', fontWeight:'600'}}>DISC</TableCell>
                         <TableCell style={{fontSize:'20px', fontWeight:'600'}}>CAT</TableCell>
                         <TableCell style={{fontSize:'20px', fontWeight:'600'}}>SUB</TableCell>
                         <TableCell style={{fontSize:'20px', fontWeight:'600'}}>QTY</TableCell>
+                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>ACT</TableCell>
                     </TableRow>
                 </TableHead>
                   <TableBody>
@@ -310,16 +329,8 @@ class CustomPaginationActionsTable extends React.Component {
                   </TableBody>
                   <TableFooter>
                   <TableRow>
-                    <TableCell colSpan={4}>Total Harga : Rp. {this.getTotalHarga()}</TableCell>
+                    <TableCell colSpan={4}><h3>Total Prices : Rp. {this.getTotalHarga()}</h3></TableCell>
                       <TableCell colSpan={1}>
-                        <Button animated color ='teal' onClick={this.checkOut}>
-                            <Button.Content visible >Check Out </Button.Content>
-                            <Button.Content hidden>
-                                <Icon name='cart' />
-                            </Button.Content>
-                            </Button>
-                      </TableCell>
-                      <TableCell colSpan={2}>
                         <Link to ='/products'><Button animated color ='teal'>
                             <Button.Content visible >Continue Shopping</Button.Content>
                             <Button.Content hidden>
@@ -327,6 +338,14 @@ class CustomPaginationActionsTable extends React.Component {
                             </Button.Content>
                             </Button>
                             </Link>
+                      </TableCell>
+                      <TableCell colSpan={3}>
+                        <Button animated color ='teal' onClick={this.checkOut}>
+                            <Button.Content visible >Check Out </Button.Content>
+                            <Button.Content hidden>
+                                <Icon name='cart' />
+                            </Button.Content>
+                            </Button>
                       </TableCell>
                     </TableRow>
                     <TableRow>

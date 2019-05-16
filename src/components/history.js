@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {urlApi} from './../support/urlApi'
 import {Link} from 'react-router-dom'
 import PageNotFound from './pageNotFound'
+import QueryString from 'query-string'
 
 
 class History extends React.Component{
@@ -11,6 +12,7 @@ class History extends React.Component{
 
     componentDidMount(){
         this.getDataApi()
+        this.getDataUrl()
     }
     getDataApi = () => {
         Axios.get(urlApi + '/trans/history/'+this.props.id)
@@ -19,6 +21,26 @@ class History extends React.Component{
                 this.setState({rows : res.data})
             })
             .catch((err) => console.log(err))
+    }
+
+    getDataUrl = () => {
+        var obj = QueryString.parse(this.props.location.search)
+        if(this.props.location.search){
+            if(obj.month < 10){
+                Axios.get(urlApi + `/trans/filterhistory?iduser=${this.props.id}&month=0${obj.month}`)
+                .then((res) => {
+                    this.setState({rows : res.data})
+                })
+                .catch((err) => console.log(err))
+            } else {
+                Axios.get(urlApi + `/trans/filterhistory?iduser=${this.props.id}&month=${obj.month}`)
+                .then((res) => {
+                    this.setState({rows : res.data})
+                })
+                .catch((err) => console.log(err))
+            }
+        }
+       
     }
 
     renderJsx = () => {
@@ -40,16 +62,16 @@ class History extends React.Component{
     Dropdown = () => {
             return <select ref = 'bulan' className='form-control'>
                         <option value={0}>All Months</option>
-                        <option value={1}>Januari</option>
-                        <option value={2}>Februari</option>
-                        <option value={3}>Maret</option>
+                        <option value={1}>January</option>
+                        <option value={2}>February</option>
+                        <option value={3}>March</option>
                         <option value={4}>April</option>
-                        <option value={5}>Mei</option>
-                        <option value={6}>Juni</option>
-                        <option value={7}>Juli</option>
-                        <option value={8}>Agustus</option>
+                        <option value={5}>May</option>
+                        <option value={6}>June</option>
+                        <option value={7}>July</option>
+                        <option value={8}>August</option>
                         <option value={9}>September</option>
-                        <option value={10}>Oktober</option>
+                        <option value={10}>October</option>
                         <option value={11}>November</option>
                         <option value={12}>Desember</option>
                     </select>
@@ -57,6 +79,7 @@ class History extends React.Component{
 
     filterData = () => {
         var bulan = this.refs.bulan.value
+        this.pushUrl()
         if(bulan == 0){
             this.getDataApi()
         }
@@ -64,12 +87,22 @@ class History extends React.Component{
             if(bulan < 10){
                 bulan = '0'+this.refs.bulan.value
             }
+           
             Axios.get(urlApi + `/trans/filterhistory?iduser=${this.props.id}&month=${bulan}`)
                 .then((res) => {
                     this.setState({rows : res.data})
                 })
                 .catch((err) => console.log(err))
+        }
+        
+    }
+
+    pushUrl = () => {
+        var newLink = '/history'
+        if(this.refs.bulan.value > 0){
+            newLink += '?month=' + this.refs.bulan.value
         } 
+        this.props.history.push(newLink)
     }
 
     

@@ -72,7 +72,9 @@ class CarouselKu extends Component {
           key={item.src}
         >
           <img src={item.src} alt={item.altText} height='550px' width='1270px' />
-          <CarouselCaption captionText={item.caption} captionHeader={item.caption} />
+          <CarouselCaption captionText={item.caption} captionHeader={item.caption}>
+          <input type='button' className='btn btn-primary' value='Click here'/>
+          </CarouselCaption>
         </CarouselItem>
       );
     });

@@ -31,18 +31,18 @@ form {
 
 .notification {
     position: absolute;
-    top : 10px;
-    left : 100px;
+    top : 15px;
+    left : 220px;
 }
 
 .wishlist {
     position: absolute;
-    top : 10px;
-    left : 140px;
+    top : 15px;
+    left : 260px;
 }
 
 .transactions {
     position: absolute;
-    top : 10px;
-    left : 180px;
+    top : 15px;
+    left : 300px;
 }

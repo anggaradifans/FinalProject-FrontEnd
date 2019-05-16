@@ -187,7 +187,9 @@ class CustomPaginationActionsTable extends React.Component {
       this.refs.subkategori.value === '' ||
       this.refs.deskripsi.value === '' ||
       this.state.selectedFile === null){
-        alert('Masukkan semua data')
+        alert('Please input all data')
+      } if(this.refs.harga.value < 0 || this.refs.diskon.value < 0 ){
+        swal('Error', 'Price or Discount value Invalid', 'error')
       } else {
         var newData = {product_name : this.refs.nama.value , price : this.refs.harga.value ,
           discount : this.refs.diskon.value , category : this.refs.kategori.value , 
@@ -257,9 +259,6 @@ class CustomPaginationActionsTable extends React.Component {
   onBtnCancel = () => {
     this.setState({isEdit : false , editItem : {}})
   }
-
-  
-  
   
   onBtnDelete = (id) => {
       Axios.delete(urlApi + '/products/deleteproduct/' + id)
@@ -325,6 +324,10 @@ class CustomPaginationActionsTable extends React.Component {
     const { rows, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
     
+    var arrSearch = this.state.rows.filter((val) => {
+      return val.product_name.toLowerCase().startsWith(this.state.searchData)
+    })
+
     if(this.props.role === 'admin'){
     return (
     <div className = 'container'>
@@ -364,7 +367,7 @@ class CustomPaginationActionsTable extends React.Component {
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   colSpan={3}
-                  count={rows.length}
+                  count={arrSearch.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   SelectProps={{
@@ -418,16 +421,16 @@ class CustomPaginationActionsTable extends React.Component {
                 <input type="button" value={this.valueHandlerEdit()} className= "btn btn-primary" onClick={() => this.refs.inputEdit.click()}/>
               </div>
               <div className="col-md-9">
-                <input type = "text" className='form-control' ref='namaEdit' placeholder={this.state.editItem.product_name}/>
-                <input type = "number" className='form-control mt-3' ref='hargaEdit' placeholder={this.state.editItem.price}/>
-                <input type = "number" className='form-control mt-3' ref='diskonEdit' placeholder={this.state.editItem.discount}/>
+                <input type = "text" className='form-control' ref='namaEdit' defaultValue={this.state.editItem.product_name}/>
+                <input type = "number" className='form-control mt-3' ref='hargaEdit' defaultValue={this.state.editItem.price}/>
+                <input type = "number" className='form-control mt-3' ref='diskonEdit' defaultValue={this.state.editItem.discount}/>
                 <select ref = 'kategoriEdit' className="form-control mt-3" defaultValue={this.state.editItem.idcat}>
                 {this.DropdownCategory()}
                 </select>
                 <select ref = 'subkategoriEdit' className="form-control mt-3" defaultValue={this.state.editItem.idsub}>
                 {this.DropdownSubcategory()}
                 </select>
-                <textarea className='form-control mt-3' ref='deskripsiEdit' placeholder={this.state.editItem.deskripsi} rows="3"/>
+                <textarea className='form-control mt-3' ref='deskripsiEdit' defaultValue={this.state.editItem.deskripsi} rows="3"/>
               </div>
             </div>
           </ModalBody>

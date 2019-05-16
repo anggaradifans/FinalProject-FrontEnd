@@ -33,6 +33,9 @@ class Search extends React.Component{
         var arrSearchAndFilter = this.state.listProduct.filter((val) => {
             return val.product_name.toLowerCase().includes(this.props.search)
         })
+        if(this.props.search === ''){
+            arrSearchAndFilter = []
+        }
         var jsx = arrSearchAndFilter.map((val) => {
                 return <div className="card col-md-3" style={{width: '18rem', margin: '20px'}}>
                         <Link to={'/product-detail/' + val.id} ><img src={ `http://localhost:2000/${val.image}`} style={{width :'250px', height :'250px'}} className="card-img-top img" alt="Card cap" /></Link>
@@ -60,7 +63,7 @@ class Search extends React.Component{
         return (
         <div className="container">
             <div className="row justify-content-center">
-            <h3 style={{margin : "10px"}}>Search Result(s) for '{this.props.search}' : {arrSearchAndFilter.length}</h3>
+            <h3 style={{margin : "10px"}}>Search Result(s) for '{this.props.search}' : { this.props.search === '' ? 0 : arrSearchAndFilter.length}</h3>
             </div>
 
             <div className="row justify-content-center">

@@ -1,49 +1,68 @@
 import React, { Component } from 'react';
+import { MDBCarousel, MDBCarouselCaption, MDBCarouselInner, MDBCarouselItem, MDBView, MDBMask, MDBContainer } from 'mdbreact';
+import {Link} from 'react-router-dom'
 
 class Carousel extends Component {
   render() {
       return (
-        <div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel">
-        <ol className="carousel-indicators">
-          <li data-target="#carouselExampleIndicators" data-slide-to={0} className="active" />
-          <li data-target="#carouselExampleIndicators" data-slide-to={1} />
-          <li data-target="#carouselExampleIndicators" data-slide-to={2} />
-        </ol>
-        <div className="carousel-inner">
-          <div className="carousel-item active">
-            <img className="d-block w-100" src="https://ksassets.timeincuk.net/wp/uploads/sites/54/2018/06/DfXNOZrXkAE1bJh.jpg" alt="First slide" />
-            <div className="carousel-caption d-none d-md-block">
-              <h3>Devil May Cry 5</h3>
-              <p></p>
-            </div>
-          </div>
-          <div className="carousel-item">
-            <img className="d-block w-100" src="https://cdn.wccftech.com/wp-content/uploads/2016/07/zelda-breath-of-the-wild.jpg" alt="Second slide" />
-            <div className="carousel-caption d-none d-md-block">
-              <h5>Legend Of Zelda : Breath of The Wild</h5>
-              <p>...</p>
-            </div>
-          </div>
-          <div className="carousel-item">
-            <img className="d-block w-100" src="https://hdqwalls.com/download/monster-hunter-world-hd-h6-1280x720.jpg" alt="Third slide" />
-            <div className="carousel-caption d-none d-md-block">
-              <h5>Monster Hunter World</h5>
-              <p>...</p>
-            </div>
-          </div>
-        </div>
-        <a className="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-          <span className="carousel-control-prev-icon" aria-hidden="true" />
-          <span className="sr-only">Previous</span>
-        </a>
-        <a className="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-          <span className="carousel-control-next-icon" aria-hidden="true" />
-          <span className="sr-only">Next</span>
-        </a>
-      </div>
-      )
-   
-  }
+          <MDBCarousel
+            activeItem={1}
+            length={3}
+            showControls={true}
+            showIndicators={true}
+            className="z-depth-1"
+          >
+            <MDBCarouselInner>
+              <MDBCarouselItem itemId="1">
+                <MDBView>
+                  <img
+                    className="d-block"
+                    src="https://wallpapersmug.com/download/2560x1080/5a0a1b/spider-man-ps4-4k.jpg"
+                    alt="First slide"
+                    width='1270px'
+                  />
+                </MDBView>
+                <MDBCarouselCaption>
+                  <h1 style={{position:"absolute", left:'0px', bottom:'150px', fontFamily: 'Viga'}}>Spiderman</h1>
+                  <h3 style={{position:"absolute", left:'0px', bottom:'120px', fontFamily: 'Viga'}}>Rp 495.000,00</h3>
+                  <Link to='/product-detail/37'><input type='button' className='btn blue-gradient rounded-pill text-light' style={{position:"absolute", left:'0px', bottom:'50px'}} value='See Product'/></Link>
+                </MDBCarouselCaption>
+              </MDBCarouselItem>
+              <MDBCarouselItem itemId="2">
+                <MDBView>
+                  <img
+                    className="d-block"
+                    src="https://live.staticflickr.com/1932/43650622460_dcf9dc4319_b.jpg"
+                    alt="Second slide"
+                    
+                    width='1270px'
+                  />
+                </MDBView>
+                <MDBCarouselCaption>
+                  <h1 style={{position:"absolute", left:'0px', bottom:'150px',fontFamily: 'Viga'}}>Red Dead Redemption 2</h1>
+                  <h3 style={{position:"absolute", left:'0px', bottom:'120px',fontFamily: 'Viga'}}>Rp488.750,00</h3>
+                  <Link to='/product-detail/7'><input type='button' className='btn blue-gradient rounded-pill text-light' style={{position:"absolute", left:'0px', bottom:'50px'}} value='See Product'/></Link>
+                </MDBCarouselCaption>
+              </MDBCarouselItem>
+              <MDBCarouselItem itemId="3">
+                <MDBView>
+                  <img
+                    className="d-block"
+                    src="https://hdwallpaper20.com/wp-content/uploads/data/2018/3/3/The-Witcher-3-Game-Wallpaper-2017.jpg"
+                    alt="Third slide"
+                    width='1270px'
+                  />
+                </MDBView>
+                <MDBCarouselCaption>
+                  <h1 style={{position:"absolute", left:'0px', bottom:'150px', fontFamily: 'Viga'}}>The Witcher 3 : Wild Hunt</h1>
+                  <h3 style={{position:"absolute", left:'0px', bottom:'120px', fontFamily: 'Viga'}}>Rp427.500,00</h3>
+                  <Link to='/product-detail/36'><input type='button' className='btn blue-gradient rounded-pill text-light' style={{position:"absolute", left:'0', bottom:'50px'}} value='See Product'/></Link>
+                </MDBCarouselCaption>
+              </MDBCarouselItem>
+            </MDBCarouselInner>
+          </MDBCarousel>
+    
+      )}
 }
 
 

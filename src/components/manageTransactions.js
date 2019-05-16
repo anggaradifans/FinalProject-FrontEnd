@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {Modal, ModalHeader, ModalBody, ModalFooter, Button} from 'reactstrap'
 import PageNotFound from './pageNotFound'
 import swal from 'sweetalert';
+import {hitungTransactions} from './../1.actions'
 
 
 class ManageTrasactions extends React.Component{
@@ -26,15 +27,22 @@ class ManageTrasactions extends React.Component{
             .catch((err) => console.log(err))
     }
 
-    approveTransaction = (id) => {
-        Axios.put(urlApi+ '/trans/approve/'+id, {status : 'Approved'})
+    approveTransaction = (param) => {
+        if(param.bukti_transaksi){
+            Axios.put(urlApi+ '/trans/approve/'+param.id, {status : 'Approved'})
             .then((res) => {
                 swal('Success', res.data, 'success')
                 this.getDataTransactions()
+                this.props.hitungTransactions()
             })
             .catch((err) => {
                 console.log(err)
             })
+        } else {
+            swal('Error', 'No Receipt, Transaction can not be approved', 'error')
+        }
+
+       
     }
 
     rejectTransaction = (param) => {
@@ -49,6 +57,7 @@ class ManageTrasactions extends React.Component{
             .then((res) => {
                 swal('Success', res.data, 'success')
                 this.getDataTransactions()
+                this.props.hitungTransactions()
             })
             .catch((err) => console.log(err))
     }
@@ -66,7 +75,7 @@ class ManageTrasactions extends React.Component{
                             <input type='button' className='btn btn-danger' value='Receipt' onClick={() => this.setState({receipt : val.bukti_transaksi, modal : true })} />
                         </td>
                         <td>
-                            <input type='button' className='btn btn-success' value='Approve' onClick={() => this.approveTransaction(val.id)} />
+                            <input type='button' className='btn btn-success' value='Approve' onClick={() => this.approveTransaction(val)} />
                             <input type='button' className='btn btn-primary' value='Reject' onClick={() => this.rejectTransaction(val)} style={{width:'115px'}}/>  
                         </td>
                         
@@ -81,13 +90,14 @@ class ManageTrasactions extends React.Component{
         if(this.props.role == 'admin'){
             return (
                 <div className="container">
+                <h3 style={{padding:'20px'}}>Manage Transactions</h3>
                 <table className="table table-hover">
                         <thead>
                         <tr>
                             <th scope="col">No</th>
-                            <th scope="col">Tanggal Pembayaran</th>
+                            <th scope="col">Date of Payment</th>
                             <th scope="col">Username</th>
-                            <th scope="col">Total Harga</th>
+                            <th scope="col">Total Prices</th>
                             <th scope="col">Status</th>
                             <th scope="col">Receipt</th>
                             <th scope="col">Action</th>
@@ -130,4 +140,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(ManageTrasactions) 
+export default connect(mapStateToProps, {hitungTransactions})(ManageTrasactions) 
