@@ -21,6 +21,12 @@ import { urlApi } from '../support/urlApi';
 import {connect } from 'react-redux'
 import {Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import PageNotFound from './pageNotFound'
+import QueryString from 'query-string'
+
+
+function formatMoney(number){
+  return number.toLocaleString('in-RP', {style : 'currency', currency: 'IDR'})
+}
 
 const actionsStyles = theme => ({
   root: {
@@ -126,6 +132,7 @@ class CustomPaginationActionsTable extends React.Component {
     this.getDataApi()
     this.getCategory()
     this.getSubcategory()
+    this.getDataUrl()
   }
 
   getDataApi = () => {
@@ -144,6 +151,13 @@ class CustomPaginationActionsTable extends React.Component {
     Axios.get(urlApi + '/category/subcategory')
       .then((res) => this.setState({subcategory : res.data}))
       .catch((err) => console.log(err))
+  }
+
+  getDataUrl = () => {
+      var obj = QueryString.parse(this.props.location.search)
+      if(this.props.location.search){
+        this.setState({searchData : obj.q})
+      }
   }
 
   handleChangePage = (event, page) => {
@@ -173,9 +187,19 @@ class CustomPaginationActionsTable extends React.Component {
   return value
   }
 
+  pushUrl = () => {
+    var newLink = '/manage'
+    if(this.refs.inputsearch.value){
+        newLink += '?q=' + this.refs.inputsearch.value
+    } 
+    this.props.history.push(newLink)
+  }
+
+
   onBtnSearchClick =() => {
     var search = this.refs.inputsearch.value
     this.setState({searchData : search.toLowerCase()})
+    this.pushUrl()
   }
 
   onBtnAdd = () => {
@@ -280,7 +304,7 @@ class CustomPaginationActionsTable extends React.Component {
                   <TableCell component="th" scope="row">
                     {val.product_name}
                   </TableCell>
-                  <TableCell>Rp. {val.price}</TableCell>
+                  <TableCell>{formatMoney(val.price)}</TableCell>
                   <TableCell>{val.discount}%</TableCell>
                   <TableCell>{val.category}</TableCell>
                   <TableCell>{val.subcategory}</TableCell>

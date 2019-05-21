@@ -2,12 +2,15 @@ import React from 'react'
 import axios from 'axios'
 import {urlApi} from './../support/urlApi'
 import './../support/css/product.css'
-import CurrencyFormat from 'react-currency-format'
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux'
 import swal from 'sweetalert'
 import {fnHitungCart} from './../1.actions'
 import QueryString from 'query-string'
+
+function formatMoney(number){
+    return number.toLocaleString('in-RP', {style : 'currency', currency: 'IDR'})
+}
 
 class ProductList extends React.Component{
     state = {listProduct : [], cart : 0, searchData : '' , 
@@ -85,7 +88,7 @@ class ProductList extends React.Component{
             })
         }
         for (var i = 0 ; i < params.length; i++){
-            if(i == 0){
+            if(i === 0){
                 newLink += '?' + params[i].params + '=' + params[i].value
             } else {
                 newLink += '&' + params[i].params + '=' + params[i].value
@@ -114,7 +117,7 @@ class ProductList extends React.Component{
             && (val.category === this.state.filterCategory || this.state.filterCategory > 5)
             && (val.subcategory === this.state.filterSub || this.state.filterSub > 3)
         })
-        var data =arrSearchAndFilter.slice(0,this.state.dataPerpage)
+        var data = arrSearchAndFilter.slice(0,this.state.dataPerpage)
         var jsx = data.map((val) => {
                 return <div className="card col-md-3" style={{width: '18rem', margin: '20px'}}>
                         <Link to={'/product-detail/' + val.id} ><img src={ `http://localhost:2000/${val.image}`} style={{width :'250px', height :'250px'}} className="card-img-top img" alt="Card cap" /></Link>
@@ -125,10 +128,10 @@ class ProductList extends React.Component{
                             <div className="card-body">
                                 <h5>{val.product_name}</h5>
                                 { val.discount > 0 ?
-                                    <CurrencyFormat value={val.price} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <p className="card-text ml-1 mr-5" style={{textDecoration:'line-through', color:'red', display:'inline'}}>{value}</p>}/>
+                                    <p className="card-text mr-3" style={{textDecoration:'line-through', color:'red', display:'inline'}}>{formatMoney(val.price)}</p>
                                     : null
                                 }
-                                <CurrencyFormat value={val.price - (val.price*(val.discount/100))} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <p className="card-text mr-4" style={{display:'inline',fontWeight:'700'}}>{value}</p>}/>
+                                <p className="card-text mr-4" style={{display:'inline',fontWeight:'700'}}>{formatMoney(val.price - (val.price*(val.discount/100)))}</p>
                                 { this.props.username === "" ?
                                 <Link to='/login'><input type='button' className="btn btn-primary" value="Add to Cart"/></Link> :
                                 <input type='button' className="btn btn-primary" value="Add to Cart" onClick={() => this.onBtnAddtoCart(val.id)}/>

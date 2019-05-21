@@ -24,6 +24,10 @@ import {fnHitungCart, resetCount} from './../1.actions'
 import {Link, Redirect} from 'react-router-dom'
 import PageNotFound from './pageNotFound'
 
+function formatMoney(number){
+  return number.toLocaleString('in-RP', {style : 'currency', currency: 'IDR'})
+}
+
 const actionsStyles = theme => ({
   root: {
     flexShrink: 0,
@@ -264,7 +268,7 @@ class CustomPaginationActionsTable extends React.Component {
                   <TableCell component="th" scope="row">
                     {val.namaProduk}
                   </TableCell>
-                  <TableCell>Rp. {val.price - (val.price*(val.discount/100))}</TableCell>
+                  <TableCell>{formatMoney(val.price - (val.price*(val.discount/100)))}</TableCell>
                   <TableCell>{val.discount}%</TableCell>
                   <TableCell>{val.category}</TableCell>
                   <TableCell>{val.subcategory}</TableCell>
@@ -291,7 +295,7 @@ class CustomPaginationActionsTable extends React.Component {
 
   render() {
 
-    if(this.state.checkOut == true){
+    if(this.state.checkOut){
       return <Redirect to= {`/payment/${this.state.order}`} />
     }
     const { classes } = this.props;
@@ -304,6 +308,40 @@ class CustomPaginationActionsTable extends React.Component {
         return (
           <div className = 'container' style={{marginBottom:'90px'}}>
             <h2 style={{padding:'10px'}}>Shopping Cart List</h2>
+             {/* EDIT PRODUCT */}
+      
+          {
+            this.state.isEdit === true ?
+            <Paper className='mt-3'>
+                <Table>
+                    <TableHead>
+                    <TableRow>
+                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>EDIT QUANTITY PRODUCT {namaProduk}</TableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell>
+                              <Input ref={input => this.quantityEdit = input} placeholder={quantity} className='mt-2 ml-2 mb-2'/>
+                              <Button animated color ='teal' className='mt-2 ml-2 mb-2' onClick={this.onBtnSave}>
+                              <Button.Content visible>Save Changes</Button.Content>
+                              <Button.Content hidden>
+                                  <Icon name='save' />
+                              </Button.Content>
+                              </Button>
+                              <Button animated color ='red' className='mt-2 ml-2 mb-2' onClick={this.onBtnCancel}>
+                              <Button.Content visible>Cancel</Button.Content>
+                              <Button.Content hidden>
+                                  <Icon name='cancel' />
+                              </Button.Content>
+                              </Button>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </Paper>
+            : null
+          }
             <Paper className={classes.root}>
               <div className={classes.tableWrapper}>
                 <Table className={classes.table}>
@@ -329,7 +367,7 @@ class CustomPaginationActionsTable extends React.Component {
                   </TableBody>
                   <TableFooter>
                   <TableRow>
-                    <TableCell colSpan={4}><h3>Total Prices : Rp. {this.getTotalHarga()}</h3></TableCell>
+                    <TableCell colSpan={4}><h3>Total Prices :   { formatMoney(this.getTotalHarga())}</h3></TableCell>
                       <TableCell colSpan={1}>
                         <Link to ='/products'><Button animated color ='teal'>
                             <Button.Content visible >Continue Shopping</Button.Content>
@@ -367,41 +405,6 @@ class CustomPaginationActionsTable extends React.Component {
                 </Table>
               </div>
             </Paper>
-      
-        {/* EDIT PRODUCT */}
-      
-          {
-            this.state.isEdit === true ?
-            <Paper className='mt-3'>
-                <Table>
-                    <TableHead>
-                    <TableRow>
-                        <TableCell style={{fontSize:'20px', fontWeight:'600'}}>EDIT QUANTITY PRODUCT {namaProduk}</TableCell>
-                    </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell>
-                              <Input ref={input => this.quantityEdit = input} placeholder={quantity} className='mt-2 ml-2 mb-2'/>
-                              <Button animated color ='teal' className='mt-2 ml-2 mb-2' onClick={this.onBtnSave}>
-                              <Button.Content visible>Save Changes</Button.Content>
-                              <Button.Content hidden>
-                                  <Icon name='save' />
-                              </Button.Content>
-                              </Button>
-                              <Button animated color ='red' className='mt-2 ml-2 mb-2' onClick={this.onBtnCancel}>
-                              <Button.Content visible>Cancel</Button.Content>
-                              <Button.Content hidden>
-                                  <Icon name='cancel' />
-                              </Button.Content>
-                              </Button>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </Paper>
-            : null
-          }
             </div>
           );
       } else {

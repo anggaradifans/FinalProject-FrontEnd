@@ -5,6 +5,7 @@ import {userRegister} from './../1.actions'
 import Loader from 'react-loader-spinner'
 import './../support/css/style.css'
 import swal from 'sweetalert'
+import validator from 'validator'
 
 class Register extends React.Component {
   state = {error : ''}
@@ -29,7 +30,11 @@ class Register extends React.Component {
       var phone = this.refs.phone.value
       if(username === "" || password === "" || email === "" || phone === ""){
           this.setState({error : "Harus diisi semua"})
-      } else {
+      } 
+      if(validator.isEmail(email) === false) {
+            this.setState({error : 'Email Format Invalid'})
+      }
+      else {
           this.props.userRegister(username,password,email,phone)
           swal('Register Success', 'Verify your email before login', 'success')
       }

@@ -19,6 +19,7 @@ import Payment from './components/payment'
 import PaymentList from './components/paymentList'
 import History from './components/history'
 import historyDetail from './components/historyDetail';
+import AnnualReport from './components/annualReport'
 import Footer from './components/footer'
 import { Route, withRouter, Switch } from 'react-router-dom'
 import {connect} from 'react-redux'
@@ -70,6 +71,7 @@ class App extends Component {
           <Route path='/paymentlist' component={PaymentList} exact/>          
           <Route path='/history' component={History} exact/>
           <Route path='/history-detail/:id' component={historyDetail} exact/>
+          <Route path='/annualreport' component={AnnualReport} exact/>
           <Route path='*' component={PageNotFound} exact/>
           
           </Switch>

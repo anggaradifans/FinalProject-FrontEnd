@@ -7,6 +7,9 @@ import PageNotFound from './pageNotFound'
 import swal from 'sweetalert';
 import {hitungTransactions} from './../1.actions'
 
+function formatMoney(number){
+    return number.toLocaleString('in-RP', {style : 'currency', currency: 'IDR'})
+}
 
 class ManageTrasactions extends React.Component{
 
@@ -69,7 +72,7 @@ class ManageTrasactions extends React.Component{
                         <th scope="row">{index+1}</th>
                         <td>{val.tanggal_bayar}</td>
                         <td>{val.username}</td>
-                        <td>Rp. {val.totalharga} ,00</td>
+                        <td>{formatMoney(val.totalharga)}</td>
                         <td>{val.status}</td>
                         <td>
                             <input type='button' className='btn btn-danger' value='Receipt' onClick={() => this.setState({receipt : val.bukti_transaksi, modal : true })} />
@@ -87,7 +90,7 @@ class ManageTrasactions extends React.Component{
 
     
     render() {
-        if(this.props.role == 'admin'){
+        if(this.props.role === 'admin'){
             return (
                 <div className="container">
                 <h3 style={{padding:'20px'}}>Manage Transactions</h3>

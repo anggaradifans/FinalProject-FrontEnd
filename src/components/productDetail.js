@@ -4,8 +4,11 @@ import {urlApi} from './../support/urlApi'
 import {connect} from 'react-redux'
 import {Link, Redirect} from 'react-router-dom'
 import swal from 'sweetalert'
-import CurrencyFormat from 'react-currency-format'
 import {fnHitungCart} from './../1.actions'
+
+function formatMoney(number){
+    return number.toLocaleString('in-RP', {style : 'currency', currency: 'IDR'})
+}
 
 class ProductDetail extends React.Component {
     state ={product : {}, cart : 0, ToCart : false, wishlist : false}
@@ -99,7 +102,7 @@ class ProductDetail extends React.Component {
     
     render(){
         var {product_name, image, discount, deskripsi, price} = this.state.product
-        if(this.state.ToCart == true){
+        if(this.state.ToCart){
             return <Redirect to='/cart'/>
         }
         return (
@@ -119,11 +122,11 @@ class ProductDetail extends React.Component {
                                     display:'inline-block'}}>{discount}%</div> : null
                         }
                         { discount > 0 ? 
-                            <CurrencyFormat value={price} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <span style={{fontSize:'12px', fontWeight:'600', color:'#606060' , 
-                            marginLeft:'10px', textDecoration:"line-through"}}>{value}</span>}/>
+                            <span style={{fontSize:'12px', fontWeight:'600', color:'#606060' , 
+                            marginLeft:'10px', textDecoration:"line-through"}}>{formatMoney(price)}</span>
                              : null}
-                        <CurrencyFormat value={price - (price*(discount/100))} displayType={'text'} thousandSeparator={true} prefix={'Rp'} renderText={value => <div style={{fontSize:'24px', fontWeight : '700', 
-                                    color:'#FF5722', marginTop:'20px'}}>{value} </div>}/>
+                        <div style={{fontSize:'24px', fontWeight : '700', 
+                                    color:'#FF5722', marginTop:'20px'}}>{formatMoney(price - (price*(discount/100)))} </div>
                         <div className="row">
                             <div className="col-md-2">
                                 <div style={{marginTop:"10px" ,color:"#606060" , 

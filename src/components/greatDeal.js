@@ -4,6 +4,9 @@ import axios from 'axios'
 import {Link} from 'react-router-dom'
 import {urlApi} from './../support/urlApi'
 
+function formatMoney(number){
+    return number.toLocaleString('in-RP', {style : 'currency', currency: 'IDR'})
+}
 
 class GreatDeal extends React.Component{
 
@@ -25,11 +28,11 @@ class GreatDeal extends React.Component{
              return <div className="card">
             <Link to={'/product-detail/' + val.id} ><img src={ `http://localhost:2000/${val.image}`} style={{width :'250px', height :'250px'}} className="card-img-top img" alt="Card cap" /></Link>
              {val.discount > 0 ? 
-            <div className="discount" style={{right:"70px"}}>{val.discount}%</div>
+            <div className="discount" style={{right:"100px"}}>{val.discount}%</div>
             : null
             }
-            <div className="kategori" style={{right:"70px", width: "100px", 
-            bottom : "10px", height: "20px", fontSize:"15px"}}>Rp. {val.price - (val.price*(val.discount/100))}</div>
+            <div className="kategori" style={{right:"100px", width: "150px", 
+            bottom : "10px", height: "20px", fontSize:"17px"}}>{formatMoney(val.price - (val.price*(val.discount/100)))}</div>
         </div>
     })
     return jsx

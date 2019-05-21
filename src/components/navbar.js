@@ -84,7 +84,9 @@ class HeaderKu extends Component{
                                     <div className="input-group mt-2" style={{width:"350px"}}>
                                         <input type="text" ref="searchBook" className="form-control" onChange ={this.valueHandler} placeholder="Enter keywords... " style={{fontFamily:'Roboto'}} />
                                         <div className="input-group-append mr-2" style={{marginTop:"-6px", height:"42px"}}>
-                                        <Link to={'/search?q='+this.state.searchData}><button className="btn blue-gradient mb-1" type="button" id="button-addon2" style={{height:"35px"}} onClick ={this.onBtnSearch}><i className="fas fa-search" /></button></Link>
+                                        { this.state.searchData ? 
+                                            <Link to={'/search?q='+this.state.searchData}><button className="btn blue-gradient mb-1" type="button" id="button-addon2" style={{height:"35px"}} onClick ={this.onBtnSearch}><i className="fas fa-search" /></button></Link>
+                                         : <button className="btn blue-gradient mb-1" type="button" id="button-addon2" style={{height:"35px"}}><i className="fas fa-search" /></button>}
                                         </div>
                                     </div> 
                                     </NavItem>
@@ -112,10 +114,16 @@ class HeaderKu extends Component{
                                             Edit Profile
                                         </DropdownItem>
                                         <DropdownItem divider />
-                                        <Link to='/history'><DropdownItem>
+                                        {this.props.role === 'admin' ?
+                                        <Link to='/annualreport'><DropdownItem>
+                                        Annual Report
+                                        </DropdownItem></Link>
+                                        : <Link to='/history'><DropdownItem>
                                             Transaction History
                                         </DropdownItem>
                                         </Link>
+                                        }
+                                        
                                         <Link to='/'><DropdownItem onClick={this.onBtnLogOut}>
                                             Logout
                                         </DropdownItem>

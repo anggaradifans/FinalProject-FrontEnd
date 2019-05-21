@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { MDBCarousel, MDBCarouselCaption, MDBCarouselInner, MDBCarouselItem, MDBView, MDBMask, MDBContainer } from 'mdbreact';
+import { MDBCarousel, MDBCarouselCaption, MDBCarouselInner, MDBCarouselItem, MDBView } from 'mdbreact';
 import {Link} from 'react-router-dom'
 
 class Carousel extends Component {

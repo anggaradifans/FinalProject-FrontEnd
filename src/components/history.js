@@ -80,7 +80,7 @@ class History extends React.Component{
     filterData = () => {
         var bulan = this.refs.bulan.value
         this.pushUrl()
-        if(bulan == 0){
+        if(bulan === 0){
             this.getDataApi()
         }
         else {

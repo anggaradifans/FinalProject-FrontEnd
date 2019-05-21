@@ -91,7 +91,7 @@ class Payment extends React.Component{
         if(this.state.success){
             return <Redirect to= '/' />
         }
-        if(this.state.data.iduser == this.props.id){
+        if(parseInt(this.state.data.iduser) === parseInt(this.props.id)){
             return (
                 <div className="container myBody" style={{minHeight:"600px"}}>
                     <div className="row justify-content-sm-center ml-auto mr-auto mt-3" >
