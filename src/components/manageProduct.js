@@ -156,7 +156,13 @@ class CustomPaginationActionsTable extends React.Component {
   getDataUrl = () => {
       var obj = QueryString.parse(this.props.location.search)
       if(this.props.location.search){
-        this.setState({searchData : obj.q})
+        if(obj.search){
+          this.setState({searchData: obj.search.toLowerCase()})
+      } if(obj.cat){
+          this.setState({filterCategory : obj.cat})
+      } if(obj.sub){
+          this.setState({filterSub: obj.sub})
+      }
       }
   }
 
@@ -189,17 +195,40 @@ class CustomPaginationActionsTable extends React.Component {
 
   pushUrl = () => {
     var newLink = '/manage'
-    if(this.refs.inputsearch.value){
-        newLink += '?q=' + this.refs.inputsearch.value
-    } 
-    this.props.history.push(newLink)
+    var params = []
+        if(this.refs.inputsearch.value){
+            params.push({
+                params : 'search',
+                value : this.refs.inputsearch.value
+            })
+        }
+        if(this.refs.dropdown.value <= 5){
+            params.push({
+                params : 'cat',
+                value : this.refs.dropdown.value
+            })
+        }
+        if(this.refs.subcat.value <= 3){
+            params.push({
+                params : 'sub',
+                value : this.refs.subcat.value
+            })
+        }
+        for (var i = 0 ; i < params.length; i++){
+            if(i === 0){
+                newLink += '?' + params[i].params + '=' + params[i].value
+            } else {
+                newLink += '&' + params[i].params + '=' + params[i].value
+            }
+        }
+        this.props.history.push(newLink)
   }
 
 
   onBtnSearchClick =() => {
     var search = this.refs.inputsearch.value
-    this.setState({searchData : search.toLowerCase()})
     this.pushUrl()
+    this.setState({searchData : search})
   }
 
   onBtnAdd = () => {
@@ -294,9 +323,11 @@ class CustomPaginationActionsTable extends React.Component {
   }
 
   renderJsx = () => {
-      var arrSearch = this.state.rows.filter((val) => {
-        return val.product_name.toLowerCase().startsWith(this.state.searchData)
-      })
+    var arrSearch = this.state.rows.filter((val) => {
+      return val.product_name.toLowerCase().startsWith(this.state.searchData)
+      && (parseInt(val.idcat) === parseInt(this.state.filterCategory) || this.state.filterCategory > 5)
+      && (parseInt(val.idsub) === parseInt(this.state.filterSub) || this.state.filterSub > 3)
+  })
       var jsx = arrSearch.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((val) => {
           return (
                 <TableRow key={val.id}>
@@ -356,9 +387,29 @@ class CustomPaginationActionsTable extends React.Component {
     return (
     <div className = 'container'>
       <h2>Manage Product</h2>
-      <div className='row mb-3'>
+      <div className='row justify-content-center mb-3'>
                     <div className='col-md-3'> 
                     <input type='text' ref='inputsearch' placeholder='Search Product' className='form-control' /> 
+                    </div>
+                    <div className='col-md-2'>
+                    <select ref='dropdown' defaultValue={this.state.filterCategory ? this.state.filterCategory : 6} onChange={() => { 
+                        this.pushUrl()
+                        this.setState({filterCategory : this.refs.dropdown.value})}} className='form-control'> 
+                    <option value={6}>All Categories </option>
+                        {
+                        this.DropdownCategory()
+                        }
+                    </select>
+                    </div>
+                    <div className='col-md-2'>
+                    <select ref='subcat' defaultValue={this.state.filterSub ? this.state.filterSub : 4} onChange={() => {
+                        this.pushUrl()
+                        this.setState({filterSub : this.refs.subcat.value})}} className='form-control'> 
+                    <option value={4}>All Subcategories </option>
+                        {
+                        this.DropdownSubcategory()
+                        }
+                    </select>
                     </div>
                     <div className='col-md-1' style={{marginTop:"-5px"}}> 
                     <input type='button' onClick={this.onBtnSearchClick} className='btn btn-info' value='search'/>

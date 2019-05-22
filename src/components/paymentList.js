@@ -4,6 +4,9 @@ import { urlApi } from '../support/urlApi';
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 
+function formatMoney(number){
+    return number.toLocaleString('in-RP', {style : 'currency', currency: 'IDR'})
+  }
 
 class PaymentList extends React.Component{
     state = {
@@ -28,7 +31,7 @@ class PaymentList extends React.Component{
                         <td>{index + 1}</td>
                         <td>{val.tanggal_checkout}</td>
                         <td>{val.jumlah_item}</td>
-                        <td>Rp. {val.totalharga},00</td>
+                        <td>{formatMoney(val.totalharga)}</td>
                         <td>{val.order_number}</td>
                         <td>{val.status}</td>
                         <Link to={'/payment/'+val.order_number}><input type='button' className='btn btn-success' value='Detail'/></Link>

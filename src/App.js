@@ -6,7 +6,7 @@ import Register from './components/register'
 import Verify from './components/verify'
 import Product from './components/productList'
 import Wishlist from './components/wishlist'
-import PS4Videogames from './components/ps4videogames'
+
 import Search from './components/searchData'
 import ManageProduct from './components/manageProduct'
 import ManageCategory from './components/manageCategory'
@@ -60,7 +60,6 @@ class App extends Component {
           <Route path='/verify' component={Verify} exact/>
           <Route path='/products' component={Product} exact/>
           <Route path='/wishlist' component={Wishlist} exact/>
-          <Route path='/ps4videogames' component={PS4Videogames} exact/>
           <Route path='/search' component={Search} exact/>
           <Route path='/manage' component={ManageProduct} exact/>
           <Route path='/category' component={ManageCategory} exact/>

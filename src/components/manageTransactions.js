@@ -16,7 +16,8 @@ class ManageTrasactions extends React.Component{
     state = {
         data : [],
         receipt : '',
-        modal : false
+        modal : false,
+        error : ''
     }
     componentDidMount(){
         this.getDataTransactions()
@@ -49,20 +50,30 @@ class ManageTrasactions extends React.Component{
     }
 
     rejectTransaction = (param) => {
-        var newData = {
-            status : 'Rejected',
-            no : param.order_number,
-            username : param.username,
-            email : param.email
-        }
+
+        swal("Why you rejected this transaction?:", {
+            content: "input",
+          })
+          .then((value) => {
+                this.setState({error : value})
+                var newData = {
+                    status : 'Rejected',
+                    no : param.order_number,
+                    username : param.username,
+                    email : param.email,
+                    error : this.state.error
+                }
+                    Axios.put(urlApi+ '/trans/reject/'+param.id, newData)
+                    .then((res) => {
+                        swal('Success', res.data, 'success')
+                        this.getDataTransactions()
+                        this.props.hitungTransactions()
+                        this.setState({error : ''})
+                    })
+                    .catch((err) => console.log(err))
+          });
+
         
-        Axios.put(urlApi+ '/trans/reject/'+param.id, newData)
-            .then((res) => {
-                swal('Success', res.data, 'success')
-                this.getDataTransactions()
-                this.props.hitungTransactions()
-            })
-            .catch((err) => console.log(err))
     }
 
     renderJsx = () => {
@@ -118,7 +129,8 @@ class ManageTrasactions extends React.Component{
                             {this.state.receipt ? 
                              <img src={'http://localhost:2000/'+this.state.receipt} width='100%' alt='broken' />
                              : 
-                             <h2>No Transactions Receipt</h2>
+                             <img src={'https://www.labaleine.fr/sites/baleine/files/image-not-found.jpg'} width='100%' alt='broken' />
+                             
                             
                             }
                            

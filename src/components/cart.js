@@ -17,6 +17,7 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 import Axios from 'axios';
 import swal from 'sweetalert'
 import Moment from 'moment'
+import {Modal, ModalBody, Spinner} from 'reactstrap'
 import {Button , Icon , Input} from 'semantic-ui-react'
 import { urlApi } from '../support/urlApi';
 import {connect } from 'react-redux'
@@ -129,7 +130,8 @@ class CustomPaginationActionsTable extends React.Component {
     editItem : {},
     order : '',
     checkOutDate : '',
-    checkOut : false
+    checkOut : false,
+    modal : false
   };
 
   componentDidMount(){
@@ -237,8 +239,8 @@ class CustomPaginationActionsTable extends React.Component {
 
    checkOut = () => {
      var order_number = `GL-${this.props.id}` + Date.now()
-    var tanggal_checkout = Moment().format('DD-MM-YYYY, h:mm:ss')
-    this.setState({order : order_number, checkOutDate : tanggal_checkout})
+    var tanggal_checkout = Moment().format('DD-MM-YYYY, h:mm:ss A')
+    this.setState({order : order_number, checkOutDate : tanggal_checkout, modal : true})
     var cart = this.getDataCart() 
     var newData = {
         order_number,
@@ -251,12 +253,13 @@ class CustomPaginationActionsTable extends React.Component {
         cart,
         status : 'Unpaid'
      }
+     
      Axios.post(urlApi+'/cart/checkout', newData)
       .then((res)  => {
         this.addToTransactionDetail()
         this.deleteCart()
         swal('Success', 'Invoice Sent to Email, Please Upload Your Receipt', 'success')
-        this.setState({checkOut:true})
+        this.setState({checkOut:true, modal : false})
       })
    }
 
@@ -405,7 +408,28 @@ class CustomPaginationActionsTable extends React.Component {
                 </Table>
               </div>
             </Paper>
-            </div>
+              
+            <div>
+            <Modal isOpen={this.state.modal} className={this.props.className}>
+              <ModalBody>
+              <div className='row justify-content-center'>
+                <Spinner type="grow" color="primary" />
+                <Spinner type="grow" color="secondary" />
+                <Spinner type="grow" color="success" />
+                <Spinner type="grow" color="danger" />
+                <Spinner type="grow" color="warning" />
+                <Spinner type="grow" color="info" />
+                <Spinner type="grow" color="light" />
+                <Spinner type="grow" color="dark" />
+              </div>
+              <div className='row justify-content-center'>
+                  <h3>Processing your Transaction...</h3>
+              </div>
+              </ModalBody>
+            </Modal>
+            </div>       
+            
+          </div>
           );
       } else {
         return (

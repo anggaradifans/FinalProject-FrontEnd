@@ -2,7 +2,7 @@ import React,  { Component } from 'react';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown,
     DropdownToggle,
     DropdownMenu,
-    DropdownItem } from 'reactstrap';
+    DropdownItem} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux'
 import {resetUser, resetCount, getSearchData} from './../1.actions'
@@ -131,7 +131,7 @@ class HeaderKu extends Component{
                                         </DropdownMenu>
                                     </UncontrolledDropdown>
                                     <NavItem>
-                                        <Link to="/cart"><NavLink className="notification" style={{color:"white"}}><i class="fas fa-shopping-cart"></i> {this.props.cart ? this.props.cart : null}</NavLink></Link>
+                                        <Link to="/cart"><NavLink className="notification" style={{color:"white"}}><i class="fas fa-shopping-cart"></i> {this.props.cart ? this.props.cart : null} </NavLink></Link>
                                     </NavItem>
                                     <NavItem>
                                     <Link to='/wishlist'><NavLink className="wishlist" style={{color:"white"}}><i class="fas fa-heart"></i></NavLink></Link>
