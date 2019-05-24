@@ -110,9 +110,14 @@ class HeaderKu extends Component{
                                         </DropdownItem></Link>
                                         : null
                                         }
-                                        <DropdownItem>
+                                        {this.props.role === 'admin' ?
+                                        <Link to="/statistics"><DropdownItem>
+                                        Statistics
+                                        </DropdownItem></Link>
+                                        : <DropdownItem>
                                             Edit Profile
                                         </DropdownItem>
+                                        }
                                         <DropdownItem divider />
                                         {this.props.role === 'admin' ?
                                         <Link to='/annualreport'><DropdownItem>

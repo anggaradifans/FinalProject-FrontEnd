@@ -6,7 +6,6 @@ import Register from './components/register'
 import Verify from './components/verify'
 import Product from './components/productList'
 import Wishlist from './components/wishlist'
-
 import Search from './components/searchData'
 import ManageProduct from './components/manageProduct'
 import ManageCategory from './components/manageCategory'
@@ -20,6 +19,7 @@ import PaymentList from './components/paymentList'
 import History from './components/history'
 import historyDetail from './components/historyDetail';
 import AnnualReport from './components/annualReport'
+import Statistics from './components/statistics'
 import Footer from './components/footer'
 import { Route, withRouter, Switch } from 'react-router-dom'
 import {connect} from 'react-redux'
@@ -71,6 +71,7 @@ class App extends Component {
           <Route path='/history' component={History} exact/>
           <Route path='/history-detail/:id' component={historyDetail} exact/>
           <Route path='/annualreport' component={AnnualReport} exact/>
+          <Route path='/statistics' component={Statistics} exact/>
           <Route path='*' component={PageNotFound} exact/>
           
           </Switch>

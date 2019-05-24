@@ -51,7 +51,7 @@ class HistoryDetail extends React.Component{
                         {this.renderJsx()}
                     </tbody>
                 </table>
-                <Link to={'/history'}><input type='button' className='btn btn-outline-success' value='Back to Previous Menu'/></Link>
+                <Link to={'/history'}><input type='button' className='btn btn-success' value='Back to Previous Menu'/></Link>
         </div>
         )
     }

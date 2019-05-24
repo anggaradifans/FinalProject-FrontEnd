@@ -5,6 +5,7 @@ import Fade from 'react-reveal/Fade'
 import Carousel from './carousel-1'
 import Hover from './hover';
 import GreatDeal from './greatDeal';
+import BestSellers from './bestSellers'
 
 
 class Homepage extends React.Component{
@@ -20,6 +21,9 @@ class Homepage extends React.Component{
             <h2 style={{textAlign:"center", fontWeight:"700"}}>Great Deals</h2>            
             <hr/>
             <GreatDeal/>
+            <h2 style={{textAlign:"center", fontWeight:"700"}}>Best Sellers</h2>            
+            <hr/>
+            <BestSellers/>
             <h2 style={{textAlign:"center", fontWeight:"700"}}>Our Products</h2>
             <hr/>
           </div>

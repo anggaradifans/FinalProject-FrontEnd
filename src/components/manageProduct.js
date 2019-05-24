@@ -314,7 +314,7 @@ class CustomPaginationActionsTable extends React.Component {
   }
   
   onBtnDelete = (id) => {
-      Axios.delete(urlApi + '/products/deleteproduct/' + id)
+      Axios.delete(urlApi + '/product/deleteproduct/' + id)
         .then((res) => {
             swal("Product Deleted" , res.data, "success")
             this.getDataApi()
@@ -381,6 +381,8 @@ class CustomPaginationActionsTable extends React.Component {
     
     var arrSearch = this.state.rows.filter((val) => {
       return val.product_name.toLowerCase().startsWith(this.state.searchData)
+      && (parseInt(val.idcat) === parseInt(this.state.filterCategory) || this.state.filterCategory > 5)
+      && (parseInt(val.idsub) === parseInt(this.state.filterSub) || this.state.filterSub > 3)
     })
 
     if(this.props.role === 'admin'){

@@ -28,15 +28,18 @@ class Register extends React.Component {
       var password =  this.refs.password.value
       var email = this.refs.email.value
       var phone = this.refs.phone.value
-      if(username === "" || password === "" || email === "" || phone === ""){
+      
+      if( email && validator.isEmail(email) === false) {
+        this.setState({error : 'Email Format Invalid'})
+      }
+      else if (username === "" || password === "" || email === "" || phone === ""){
           this.setState({error : "Harus diisi semua"})
       } 
-      if(validator.isEmail(email) === false) {
-            this.setState({error : 'Email Format Invalid'})
-      }
+     
       else {
           this.props.userRegister(username,password,email,phone)
           swal('Register Success', 'Verify your email before login', 'success')
+          this.setState({error : ''})
       }
   }
   renderLoaderOrBtn = () => {

@@ -87,8 +87,8 @@ class AnnualReport extends React.Component{
     filterData = () => {
         var bulan = this.refs.bulan.value
         this.pushUrl()
-        if(bulan === 0){
-            this.getDataApi()
+        if(parseInt(bulan) === parseInt(0)){
+            this.getData()
         }
         else {
             if(bulan < 10){

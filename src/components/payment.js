@@ -63,7 +63,7 @@ class Payment extends React.Component{
     completePayment = () => {
         if(this.state.selectedFile){
             var newData = {
-                tanggal_bayar : Moment().format('DD-MM-YYYY, h:mm:ss'),
+                tanggal_bayar : Moment().format('DD-MM-YYYY, h:mm:ss A'),
                 status : 'Paid'
             }
             var fd = new FormData()
@@ -106,8 +106,8 @@ class Payment extends React.Component{
                                 {this.state.data.status === 'Unpaid' || this.state.data.status === 'Rejected' ? 
                                 <div className="row mt-4 ml-1">
                                     <input style={{display:"none"}} ref="input" type="file" onChange={this.onChangeHandler}/>
-                                    <input type="button" className="btn purple-gradient mb-1" onClick={() => this.refs.input.click()} value={this.valueHandler()}/>
-                                    <input type='button' className='btn peach-gradient ml-2' value='Complete Transaction' onClick={this.completePayment}/>
+                                    <input type="button" className="btn btn-indigo mb-1" onClick={() => this.refs.input.click()} value={this.valueHandler()}/>
+                                    <input type='button' className='btn btn-danger ml-2' value='Complete Transaction' onClick={this.completePayment}/>
                                 </div> :
                                     <h3>You have already paid this transaction.</h3>
                                 }

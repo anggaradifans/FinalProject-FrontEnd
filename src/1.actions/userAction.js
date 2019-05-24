@@ -41,7 +41,8 @@ export const onLogin = (paramUsername,paramPassword) => {
                             role : res.data[0].role,
                         email : res.data[0].email}
                         
-                    }, swal("Success", "Login Success, Redirecting to Homepage" , "success")
+                    }, objCookie.set('userData',res.data[0].username,{path : '/'}) // path '/' agar cookienya diakses di semua components
+                    , swal("Success", "Login Success, Redirecting to Homepage" , "success")
                 )
             }
             
@@ -103,9 +104,7 @@ export const userRegister = (a,b,c,d) => {
             } else {
                 dispatch({
                     type : 'REGISTER_SUCCESS'
-                },
-                    objCookie.set('userData',a,{path : '/'}) // path '/' agar cookienya diakses di semua components
-                )
+                })
                 
             }
         })
