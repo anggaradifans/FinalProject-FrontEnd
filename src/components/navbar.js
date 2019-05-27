@@ -114,21 +114,18 @@ class HeaderKu extends Component{
                                         <Link to="/statistics"><DropdownItem>
                                         Statistics
                                         </DropdownItem></Link>
-                                        : <DropdownItem>
-                                            Edit Profile
+                                        : <Link to='/history'><DropdownItem>
+                                        Transaction History
                                         </DropdownItem>
+                                        </Link>
                                         }
                                         <DropdownItem divider />
                                         {this.props.role === 'admin' ?
                                         <Link to='/annualreport'><DropdownItem>
                                         Annual Report
                                         </DropdownItem></Link>
-                                        : <Link to='/history'><DropdownItem>
-                                            Transaction History
-                                        </DropdownItem>
-                                        </Link>
+                                        : null
                                         }
-                                        
                                         <Link to='/'><DropdownItem onClick={this.onBtnLogOut}>
                                             Logout
                                         </DropdownItem>
@@ -164,8 +161,7 @@ const mapStateToProps = (state) => {
         role : state.user.role,
         cart : state.cart.cart,
         search : state.search.searchData,
-        transactions : state.trans.transactions
-    
+        transactions : state.trans.transactions,
     }
 }
 

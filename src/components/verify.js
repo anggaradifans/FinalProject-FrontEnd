@@ -1,6 +1,7 @@
 import React from 'react'
 import queryString from 'query-string'
 import Axios from 'axios'
+import swal from 'sweetalert';
 
 class Verify extends React.Component{
     componentDidMount(){
@@ -15,7 +16,7 @@ class Verify extends React.Component{
             password : params.password
         }
         )
-        .then((res) => alert(res.data))
+        .then((res) => swal('Success',res.data, 'success'))
         .catch((err) => console.log(err))
     }
 

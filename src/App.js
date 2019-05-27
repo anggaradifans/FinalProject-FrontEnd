@@ -40,7 +40,7 @@ class App extends Component {
     if(terserah !== undefined){
       this.props.keepLogin(terserah)
       this.props.fnHitungCart(terserah)
-      this.props.hitungTransactions()   
+      this.props.hitungTransactions()
     } else {
       this.props.cookieChecked()
     }
