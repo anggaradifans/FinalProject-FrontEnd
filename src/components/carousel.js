@@ -1,27 +1,30 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Carousel,
   CarouselItem,
   CarouselControl,
   CarouselIndicators,
   CarouselCaption
-} from 'reactstrap';
+} from "reactstrap";
 
 const items = [
   {
-    src: 'https://ksassets.timeincuk.net/wp/uploads/sites/54/2018/06/DfXNOZrXkAE1bJh.jpg',
-    altText: 'MaretMantap',
-    caption: 'Devil May Cry 5'
+    src:
+      "https://ksassets.timeincuk.net/wp/uploads/sites/54/2018/06/DfXNOZrXkAE1bJh.jpg",
+    altText: "MaretMantap",
+    caption: "Devil May Cry 5"
   },
   {
-    src: 'https://cdn.wccftech.com/wp-content/uploads/2016/07/zelda-breath-of-the-wild.jpg',
-    altText: 'MaretMantap',
-    caption: 'The Legend of Zelda : Breath of the Wild'
+    src:
+      "https://cdn.wccftech.com/wp-content/uploads/2016/07/zelda-breath-of-the-wild.jpg",
+    altText: "MaretMantap",
+    caption: "The Legend of Zelda : Breath of the Wild"
   },
   {
-    src: 'https://hdqwalls.com/download/monster-hunter-world-hd-h6-1280x720.jpg',
-    altText: 'MaretMantap',
-    caption: 'Monster Hunter World'
+    src:
+      "https://hdqwalls.com/download/monster-hunter-world-hd-h6-1280x720.jpg",
+    altText: "MaretMantap",
+    caption: "Monster Hunter World"
   }
 ];
 
@@ -46,13 +49,19 @@ class CarouselKu extends Component {
 
   next() {
     if (this.animating) return;
-    const nextIndex = this.state.activeIndex === items.length - 1 ? 0 : this.state.activeIndex + 1;
+    const nextIndex =
+      this.state.activeIndex === items.length - 1
+        ? 0
+        : this.state.activeIndex + 1;
     this.setState({ activeIndex: nextIndex });
   }
 
   previous() {
     if (this.animating) return;
-    const nextIndex = this.state.activeIndex === 0 ? items.length - 1 : this.state.activeIndex - 1;
+    const nextIndex =
+      this.state.activeIndex === 0
+        ? items.length - 1
+        : this.state.activeIndex - 1;
     this.setState({ activeIndex: nextIndex });
   }
 
@@ -64,16 +73,28 @@ class CarouselKu extends Component {
   render() {
     const { activeIndex } = this.state;
 
-    const slides = items.map((item) => {
+    const slides = items.map(item => {
       return (
         <CarouselItem
           onExiting={this.onExiting}
           onExited={this.onExited}
           key={item.src}
         >
-          <img src={item.src} alt={item.altText} height='550px' width='1270px' />
-          <CarouselCaption captionText={item.caption} captionHeader={item.caption}>
-          <input type='button' className='btn btn-primary' value='Click here'/>
+          <img
+            src={item.src}
+            alt={item.altText}
+            height="550px"
+            width="1270px"
+          />
+          <CarouselCaption
+            captionText={item.caption}
+            captionHeader={item.caption}
+          >
+            <input
+              type="button"
+              className="btn btn-primary"
+              value="Click here"
+            />
           </CarouselCaption>
         </CarouselItem>
       );
@@ -85,14 +106,25 @@ class CarouselKu extends Component {
         next={this.next}
         previous={this.previous}
       >
-        <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
+        <CarouselIndicators
+          items={items}
+          activeIndex={activeIndex}
+          onClickHandler={this.goToIndex}
+        />
         {slides}
-        <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
-        <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
+        <CarouselControl
+          direction="prev"
+          directionText="Previous"
+          onClickHandler={this.previous}
+        />
+        <CarouselControl
+          direction="next"
+          directionText="Next"
+          onClickHandler={this.next}
+        />
       </Carousel>
     );
   }
 }
-
 
 export default CarouselKu;
